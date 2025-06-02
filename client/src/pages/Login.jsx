@@ -7,7 +7,7 @@ const Login = () => {
       <div className="bg-white shadow-xl rounded-xl flex flex-col md:flex-row w-full max-w-6xl relative">
 
         {/* Circle Logo */}
-        <div className="absolute -top-5 left-1/2 md:left-1/5 transform -translate-x-1/2 md:translate-x-0 z-10">
+        <div className="absolute -top-0.25 left-1/2 md:left-1/5 transform -translate-x-1/2 md:translate-x-0 z-10">
           <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-white border-4 border-blue-100 shadow-lg flex flex-col items-center justify-center text-center px-2">
             <div className="text-lg md:text-xl font-bold leading-tight">
               <div className="text-red-600"> साहित्यिक</div>
