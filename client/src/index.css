@@ -3,6 +3,8 @@
 
 *{
     font-family: "Noto Sans Devanagari", sans-serif;
+    overflow: hidden;
+  -webkit-overflow-scrolling: none;
 }
 @theme{
   --color-primary:#5044E5
