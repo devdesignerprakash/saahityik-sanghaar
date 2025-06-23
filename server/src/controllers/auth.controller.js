@@ -12,7 +12,7 @@ export const signUp=async(req,res)=>{
             userName,
             password
         })
-       const token= generateToken(newUser._id)
+       const token= generateToken(newUser._id,newUser.userType)
        res.status(201).json({
         msg:"user created successfully",
         newUser,
@@ -40,7 +40,8 @@ export const login=async(req,res)=>{
         if(!isPasswordMatch){
             return res.status(401).json({msg:"Invlaid Crenditals"})
         }
-        const token=generateToken(existUser._id)
+        console.log(existUser)
+        const token=generateToken(existUser._id,existUser.userType)
         res.status(200).json({
             msg:"user logged in successfully",
             token
