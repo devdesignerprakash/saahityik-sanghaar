@@ -12,7 +12,7 @@ export const getAllUsers=async(req,res)=>{
 }
 export const getUser=async(req,res)=>{
     try{
-        const {id}=req
+        const {id}=req.user
         const user= await User.findById({_id:id})
         if(!user){
             return res.status(400).json({msg:"user not found"})
@@ -24,14 +24,9 @@ export const getUser=async(req,res)=>{
     }
 }
 export const deleteUser=async(req,res)=>{
-    console.log(req)
     try{
-        const {userType}=req
+        const {userType}=req.user
         const {id}=req.params
-        const existUser= await User.findById({_id:id})
-        if(!existUser){
-            return res.status(400).json({msg:"user not found"})
-        }
         if(userType!=='admin'){
             return res.status(401).json({msg:"unauthorized action"})
         }

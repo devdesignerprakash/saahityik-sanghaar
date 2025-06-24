@@ -8,8 +8,10 @@ export const verifyToken=async(req,res,next)=>{
        return res.status(401).json({msg:"unauthorized user"})
     }
     const {id,userType}=verifyToken
-    req.id=id
-    req.userType=userType
+    req.user={
+        id,
+        userType
+    }
     next()
     }
     catch(error){

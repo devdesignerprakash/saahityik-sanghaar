@@ -7,5 +7,5 @@ userRouter.post('/signup',signUp)
 userRouter.post('/login',login)
 userRouter.get('/allusers',getAllUsers)
 userRouter.get('/getuser',verifyToken,getUser)
-userRouter.delete('/delete-user/:id',verifyToken,deleteUser)
+userRouter.delete('/deleteUser/:id',verifyToken,deleteUser)
 export default userRouter

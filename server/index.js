@@ -3,12 +3,14 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import { dbConnection } from './src/configuration/database.config.js'
 import userRouter from './src/routes/user.route.js'
+import postTypeRouter from './src/routes/postType.route.js'
 dotenv.config()
 const app= express()
 app.use(express.json())
 app.use(cors())
 
 app.use('/api/user',userRouter)
+app.use('/api/postType',postTypeRouter)
 app.listen(process.env.PORT,()=>{
     dbConnection().then(()=>{
         console.log('database is connected successfully')
