@@ -6,6 +6,7 @@ const postSchema= new mongoose.Schema({
     content:{type:String, required:true},
     author:{type:String, required:true},
     image:{type:String},
+    status:{type:String, enum:["published","pending"], default:"pending"},
     likes:[{type:mongoose.Schema.Types.ObjectId,ref:"User"}],
     comments:[{
         comment:{type:String,default:""},

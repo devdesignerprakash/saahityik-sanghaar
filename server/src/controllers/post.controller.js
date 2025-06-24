@@ -24,3 +24,15 @@ export const createPost=async(req,res)=>{
         res.status(500).json({error:error.message})
     }
 }
+export const getPosts=async(req,res)=>{
+    try{
+        const allPosts= await Post.find()
+        if(allPosts.length>0){
+           return res.status(200).json(allPosts)
+        }
+        return res.staus(400).json({msg:"no post found"})
+
+    }catch(error){
+        res.status(500).json({error:error.message})
+    }
+}
