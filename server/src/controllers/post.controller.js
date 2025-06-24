@@ -36,3 +36,12 @@ export const getPosts=async(req,res)=>{
         res.status(500).json({error:error.message})
     }
 }
+export const getPublishedPosts=async(req,res)=>{
+    try{
+        const allPosts= await Post.find()
+        
+
+    }catch(error){
+        res.status(500).json({error:error.message})
+    }
+}
