@@ -39,8 +39,8 @@ export const getPosts=async(req,res)=>{
 export const getPublishedPosts=async(req,res)=>{
     try{
         const allPosts= await Post.find()
-        
-
+        const filteredPost= allPosts.filter(post => post.status == "published")
+        res.status(200).json(filteredPost)
     }catch(error){
         res.status(500).json({error:error.message})
     }

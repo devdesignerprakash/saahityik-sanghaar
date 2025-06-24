@@ -8,6 +8,7 @@ const postSchema= new mongoose.Schema({
     image:{type:String},
     status:{type:String, enum:["published","pending"], default:"pending"},
     likes:[{type:mongoose.Schema.Types.ObjectId,ref:"User"}],
+    publishedAt: { type: Date },
     comments:[{
         comment:{type:String,default:""},
         user:{type:mongoose.Schema.Types.ObjectId, ref:"User"}
