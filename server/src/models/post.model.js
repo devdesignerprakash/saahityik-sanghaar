@@ -6,11 +6,10 @@ const postSchema= new mongoose.Schema({
     content:{type:String, required:true},
     author:{type:String, required:true},
     image:{type:String},
-    likes:[{type:SchemaTypes.ObjectId, ref:"User"}],
+    likes:[{type:mongoose.Schema.Types.ObjectId,ref:"User"}],
     comments:[{
-        comment:{type:String},
-        user:{type:Schema.Types.ObjectId},
-        default:""
+        comment:{type:String,default:""},
+        user:{type:mongoose.Schema.Types.ObjectId, ref:"User"}
     }]
 },{
     timestamps:true

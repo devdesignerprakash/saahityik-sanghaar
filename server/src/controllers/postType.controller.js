@@ -4,7 +4,7 @@ export const createPostType=async(req,res)=>{
         if (req.user.userType !== 'admin') {
             return res.status(403).json({ msg: 'Only admin can create post types' });
         }
-        const {postType,remarks}=req.body
+        const {postType,labelName,remarks}=req.body
     
         const existPostType= await PostType.findOne({postType})
         if(existPostType){
@@ -12,6 +12,7 @@ export const createPostType=async(req,res)=>{
         }
         const newPostType= await PostType.create({
             postType,
+            labelName,
             remarks
         })
         res.status(201).json(newPostType)
@@ -40,13 +41,14 @@ export const updatePostType=async(req,res)=>{
             return res.status(403).json({ msg: 'Only admin can update post types' });
         }
         const {id}= req.params
-         const {postType}=req.body
+         const {postType,labelName}=req.body
         const existpostType= await PostType.findOne({_id:id})
         if(!existpostType){
             return res.status(400).json({msg:"post type not found"})
         }
         const updatedPostType= await PostType.findByIdAndUpdate({_id:id},{
-            postType
+            postType,
+            labelName
         },{new:true})
         res.status(200).json(updatedPostType)
     }catch(error){
