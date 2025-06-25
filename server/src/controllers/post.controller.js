@@ -63,13 +63,14 @@ export const published = async (req, res) => {
     }
 
     const { id } = req.params;
+    const {status}=req.body
 
     const existPost = await Post.findById(id);
     if (!existPost) {
       return res.status(404).json({ msg: "Post not found" });
     }
 
-    existPost.status = "published";
+    existPost.status = status;
     existPost.publishedAt = new Date();
     await existPost.save();
 
