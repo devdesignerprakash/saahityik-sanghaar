@@ -32,6 +32,9 @@ export const createPost = async (req, res) => {
 // Get All Posts
 export const getPosts = async (req, res) => {
   try {
+    if (req.user.userType !== "admin") {
+      return res.status(403).json({ msg: "Only admin can create post" });
+    }
     const allPosts = await Post.find();
     if (allPosts.length > 0) {
       return res.status(200).json(allPosts);
