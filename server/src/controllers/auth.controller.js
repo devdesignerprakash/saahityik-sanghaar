@@ -4,6 +4,12 @@ import bcrypt from 'bcryptjs'
 export const signUp=async(req,res)=>{
     try{
         const {fullName,email, address, gender,userName, password}=req.body
+        const existUser= await User.findOne({
+            $or:[{userName:userName},{email:email}]
+        })
+        if(existUser){
+            return res.status(400).json({msg:"user already exist"})
+        }
         const newUser= await User.create({
             fullName,
             email,
