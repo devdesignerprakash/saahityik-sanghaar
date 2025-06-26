@@ -20,7 +20,7 @@ export const createPost = async (req, res) => {
       postType: existPostType._id,
       content,
       author,
-      image,
+      imageUrl:req.imageUrl||null
     });
 
     res.status(201).json(newPost);

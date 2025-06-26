@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 export const signUp=async(req,res)=>{
     try{
         const {fullName,email, address, gender,userName, password}=req.body
+        console.log(req)
         const existUser= await User.findOne({
             $or:[{userName:userName},{email:email}]
         })

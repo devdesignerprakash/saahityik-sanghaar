@@ -5,7 +5,7 @@ const postSchema= new mongoose.Schema({
     postType:{type:SchemaTypes.ObjectId, ref:'PostType',required:true},
     content:{type:String, required:true},
     author:{type:String, required:true},
-    image:{type:String},
+    imageUrl:{type:String},
     status:{type:String, enum:["published","pending"], default:"pending"},
     likes:[{type:mongoose.Schema.Types.ObjectId,ref:"User"}],
     publishedAt: { type: Date, default:null},

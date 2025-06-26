@@ -1,33 +1,56 @@
-import multer from 'multer'
-import path from 'path'
-import fs from 'fs'
-import {v2 as cloudinary} from 'cloudinary'
-const storage= multer.diskStorage({
-    destination:function (req,file,cb) {
-         cb(null, '/uloads')  
-    },
-    filename: function(req,file,cb){
-        cb(null,Date.now()+path.extname(file.originalname))
-    }
-})
-const upload=multer({storage:storage})
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+import cloudinary from '../configuration/cloudinary.config.js';
 
-export const optionalImageUpload=async(req,res,next)=>{
-   try{
-    const uploadImage=  upload.single('image')
-    uploadImage(req,res,async (err))=>{
-        try{
-
-
-        }catch(error){
-
+// Temporary disk storage using multer
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadPath = './uploads/';
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath);
         }
+        cb(null, uploadPath);
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9) + ext;
+        cb(null, uniqueName);
     }
+});
 
-   }catch(error){
-    res.status(500).json({error:error.message})
-   }
+const upload = multer({ storage });
 
-}
+const optionalImageUpload = (req, res, next) => {
+    const uploadMiddleware = upload.single('image');
 
-//to upload file
+    uploadMiddleware(req, res, async (err) => {
+        try {
+            if (err instanceof multer.MulterError || err) {
+                return res.status(400).json({ error: 'Multer Error', details: err.message });
+            }
+
+            if (!req.file) return next(); // No file uploaded
+
+            const localPath = req.file.path;
+
+            // Upload to Cloudinary
+            const result = await cloudinary.uploader.upload(localPath, {
+                folder: 'uploads',
+                resource_type: 'image'
+            });
+
+            // Remove local file
+            fs.unlinkSync(localPath);
+
+            // Attach URL to request
+            req.imageUrl = result.secure_url;
+            next();
+
+        } catch (error) {
+            return res.status(500).json({ error: 'Upload failed', details: error.message });
+        }
+    });
+};
+
+export default optionalImageUpload;
