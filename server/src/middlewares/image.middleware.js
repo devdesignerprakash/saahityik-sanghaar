@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 const optionalImageUpload = (req, res, next) => {
-    const uploadMiddleware = upload.single('image');
+    const uploadMiddleware = upload.single('imageUrl');
 
     uploadMiddleware(req, res, async (err) => {
         try {
