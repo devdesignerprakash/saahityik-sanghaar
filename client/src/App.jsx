@@ -6,6 +6,7 @@ import NavBar from './components/NavBar'
 import Login from './pages/Login'
 import AdminLayout from './components/adminComponents/AdminLayout'
 import Dashboard from './pages/adminPages/Dashboard'
+import SignUp from './pages/SignUp'
 
 function App() {
   
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Home/>}/>
          <Route path="/blog/:title" element={<Blog/>}/>
          <Route path="/login" element={<Login/>}/>
+         <Route path="/signup" element={<SignUp/>}/>
          <Route path="/admin" element={<AdminLayout/>}>
          <Route index element={<Dashboard/>}/>
          </Route>
