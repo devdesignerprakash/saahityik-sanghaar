@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Nepali from 'nepalify-react';
 
 const SignUp = () => {
+  const [userDetails,setUserDetails]=useState({
+    fullName:"",
+    email:"",
+    address:"",
+    gender:"",
+    userName:"",
+    password:""
+
+  })
+  const handleInputChange=(e)=>{
+    console.log(e.target.value)
+    const{name,value}=e.target
+   setUserDetails(prev => ({
+    ...prev,
+    [name]: value
+  }));
+  }
   
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-gray-100 shadow-xl rounded-xl">
@@ -20,6 +37,9 @@ const SignUp = () => {
                 funcname="unicodify"
                 type="text"
                 placeholder="पुरा नाम"
+                name="fullName"
+                value={userDetails.fullName}
+                valueChange={(e)=>handleInputChange(e)}
                 required
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -32,8 +52,11 @@ const SignUp = () => {
               </label>
               <Nepali
                 funcname="unicodify"
+                name="address"
+                value={userDetails.address}
                 type="text"
                 placeholder="ठेगाना"
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -48,6 +71,9 @@ const SignUp = () => {
                 type="email"
                 placeholder="john@doe"
                 required
+                name="email"
+                value={userDetails.email}
+                onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -61,6 +87,9 @@ const SignUp = () => {
               <select
                 required
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                name='gender'
+                value={userDetails.gender}
+                onChange={handleInputChange}
               >
                 <option value="">लिङ्ग चयन गर्नुहोस्</option>
                 <option value="male">पुरुष</option>
@@ -78,6 +107,9 @@ const SignUp = () => {
                 type="text"
                 placeholder="Username"
                 required
+                name="userName"
+                onChange={handleInputChange}
+                value={userDetails.userName}
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -91,6 +123,9 @@ const SignUp = () => {
                 type="password"
                 placeholder="Password"
                 required
+                name="password"
+                value={userDetails.password}
+                onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
