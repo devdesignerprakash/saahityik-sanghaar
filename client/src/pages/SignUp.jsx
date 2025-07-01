@@ -1,31 +1,57 @@
 import React, { useState } from 'react';
 import Nepali from 'nepalify-react';
+import axios from 'axios'
 
 const SignUp = () => {
-  const [userDetails,setUserDetails]=useState({
-    fullName:"",
-    email:"",
-    address:"",
-    gender:"",
-    userName:"",
-    password:""
+  const [userDetails, setUserDetails] = useState({
+    fullName: "",
+    email: "",
+    address: "",
+    gender: "",
+    userName: "",
+    password: ""
 
   })
-  const handleInputChange=(e)=>{
+  const handleInputChange = (e) => {
     console.log(e.target.value)
-    const{name,value}=e.target
-   setUserDetails(prev => ({
-    ...prev,
-    [name]: value
-  }));
+    const { name, value } = e.target
+    setUserDetails(prev => ({
+      ...prev,
+      [name]: value
+    }));
   }
-  
+  const handleSubmit = async (e) => {
+    console.log("on handle Clicked")
+    e.preventDefault()
+    try {
+      const response = await axios.post('http://localhost:8000/api/user/signup', userDetails, { withCredentials: true })
+      if (response.status == 201) {
+        setUserDetails(
+          {
+            fullName: "",
+            email: "",
+            address: "",
+            gender: "",
+            userName: "",
+            password: ""
+
+          }
+        )
+      }
+
+    } catch (error) {
+      console.log(error.message)
+    }
+
+  }
+
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-gray-100 shadow-xl rounded-xl">
       <div className="bg-white w-full h-full p-8 rounded-lg">
         <h1 className="text-3xl font-bold text-center mb-6">प्रयोगकर्ता दर्ता फारम</h1>
-
-        <form className="flex flex-col md:flex-row gap-6">
+        
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+           <div className="flex flex-col md:flex-row gap-6">
           {/* Left Column */}
           <div className="flex flex-col w-full md:w-1/2 gap-4">
             {/* Full Name (Nepali) */}
@@ -38,8 +64,7 @@ const SignUp = () => {
                 type="text"
                 placeholder="पुरा नाम"
                 name="fullName"
-                value={userDetails.fullName}
-                valueChange={(e)=>handleInputChange(e)}
+                valueChange={(e) => handleInputChange(e)}
                 required
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -53,10 +78,9 @@ const SignUp = () => {
               <Nepali
                 funcname="unicodify"
                 name="address"
-                value={userDetails.address}
+                valueChange={(e) => handleInputChange(e)}
                 type="text"
                 placeholder="ठेगाना"
-                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -130,17 +154,19 @@ const SignUp = () => {
               />
             </div>
           </div>
+          </div>
+          <div className="mt-1 text-center ">
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition cursor-pointer"
+            >
+              पेश गर्नुहोस्
+            </button>
+          </div>
         </form>
 
         {/* Submit Button */}
-        <div className="mt-6 text-center">
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition cursor-pointer"
-          >
-            पेश गर्नुहोस्
-          </button>
-        </div>
+
       </div>
     </div>
   );
