@@ -7,12 +7,10 @@ const AuthContext = createContext();
 // Auth Provider Component
 export const AuthContextProvider = ({ children }) => {
     const [token, setToken] = useState('');
-    const [user, setUser] = useState({});
-    console.log(user, 'token:', token);
-
+    const [user, setUser] = useState(null);
     // Load token from localStorage on component mount
     useEffect(() => {
-        const storedToken = localStorage.getItem('authToken');
+        const storedToken = localStorage.getItem('authToken')||sessionStorage.getItem("authToken");;
         if (storedToken) {
             setToken(storedToken);
         }
@@ -39,17 +37,22 @@ export const AuthContextProvider = ({ children }) => {
 
     // Login function - manually sync token 
     //minimize the everytime re-render issuse when login is clicked
-    const login = useCallback(() => {
-        const storedToken = localStorage.getItem('authToken');
-        if (storedToken) {
-            setToken(storedToken);
+    const login = useCallback((newToken,rememberMe=false) => {
+        if(rememberMe){
+            localStorage.setItem('authToken', newToken);
         }
+        else {
+            sessionStorage.setItem('authToken', newToken);
+        }
+        setToken(newToken)
     }, []);
 
     // Logout function
     const logout = useCallback(() => {
         localStorage.removeItem('authToken');
+        sessionStorage.removeItem('authToken');
         setToken('');
+        setUser(null);
     }, []);
 
     return (

@@ -2,6 +2,9 @@ import React,{useContext, useState} from "react";
 import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa";
 import AuthContext from "../context/AuthContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+
 
 
 const Login = () => {
@@ -10,7 +13,9 @@ const Login = () => {
     email:"",
     password:""
   })
-  const {login}=useContext(AuthContext)
+  const navigate=useNavigate()
+  const [rememberMe, setRememberMe] = useState(false);
+  const {login,user}=useContext(AuthContext)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCredentials((prev) => ({
@@ -23,13 +28,14 @@ const Login = () => {
     const response= await axios.post('http://localhost:8000/api/user/login', credentials, { withCredentials: true });
     console.log(response)
     if (response.status === 200) {
-      localStorage.setItem('authToken', response.data.token);
-      login(); // Call login to sync token
+      const { token } = response.data;
+      login(token,rememberMe);
       setCredentials({
         userName: "",
         email: "",
         password: ""
       }); 
+      navigate('/')
     }  
   };
   return (
@@ -79,6 +85,7 @@ const Login = () => {
               name="userName"
               value={credentials.userName}
               onChange={handleInputChange}
+              required
             />
             <input
               type="password"
@@ -87,11 +94,14 @@ const Login = () => {
               name="password"
               value={credentials.password}  
               onChange={handleInputChange}
+              required
             />
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-sm text-gray-600 gap-2 sm:gap-0">
               <label className="flex items-center gap-2">
                 <input type="checkbox"
                 className="form-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 rounded-md"
+                value={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
                  />
                 Remember me
               </label>
@@ -103,6 +113,7 @@ const Login = () => {
               type="submit"
               className="bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
             >
+              
               Login
             </button>
             <p className="text-sm text-center text-gray-700">
