@@ -9,9 +9,7 @@ const NavBar = () => {
  
   const handleLogoutClicked = () => {
     logout(); 
-    setTimeout(() => {
-       navigate("/");   
-    }, 1000); // Redirect to home after logout
+    navigate("/") // Redirect to home after logout
   }
 
   return (
@@ -24,7 +22,7 @@ const NavBar = () => {
 
       {/* Right-side */}
       <div className="flex gap-4 items-center">
-        {user ? (
+        {user && (
           <>
             <div className="text-gray-700 font-semibold">
             नमस्ते, {user.fullName}, स्वागत छ!
@@ -50,9 +48,9 @@ const NavBar = () => {
               </svg>
             </button>
           </>
-        ) : (
+        )}
           <button
-            className="flex gap-2 justify-center items-center text-white bg-blue-700 px-10 py-2.5 rounded-full hover:bg-blue-800 transition"
+           className={`flex gap-2 justify-center items-center text-white bg-blue-700 px-10 py-2.5 rounded-full hover:bg-blue-800 transition cursor-pointer ${user ? "hidden" : ""}`}
             onClick={() => navigate("/login")}
           >
             लग-इन
@@ -71,7 +69,6 @@ const NavBar = () => {
               />
             </svg>
           </button>
-        )}
       </div>
     </div>
   );
