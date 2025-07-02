@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import Nepali from 'nepalify-react';
 import axios from 'axios'
 import {toast} from 'react-toastify';
-
+import nepalify from "nepalify";
 
 const SignUp = () => {
   const [userDetails, setUserDetails] = useState({
@@ -14,12 +13,21 @@ const SignUp = () => {
     password: ""
 
   })
+
   const handleInputChange = (e) => {
-    console.log(e.target.value)
     const { name, value } = e.target
     setUserDetails(prev => ({
       ...prev,
       [name]: value
+    }));
+  }
+
+  //handle fullName and address in Nepali
+  const handleNepaliInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserDetails(prev => ({
+      ...prev,          
+      [name]: nepalify.format(value) // Convert to Nepali script
     }));
   }
   const handleSubmit = async (e) => {
@@ -69,13 +77,12 @@ const SignUp = () => {
               <label className="block mb-1 text-sm font-medium">
                 तपाईँको पुरा नाम <span className="text-red-500">*</span>
               </label>
-              <Nepali
-                funcname="unicodify"
+              <input
                 type="text"
                 placeholder="पुरा नाम"
                 name="fullName"
                 value={userDetails.fullName}
-                valueChange={(e) => handleInputChange(e)}
+                onChange={(e) => handleNepaliInputChange(e)}
                 required
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -86,11 +93,10 @@ const SignUp = () => {
               <label className="block mb-1 text-sm font-medium">
                 ठेगाना <span className="text-red-500">*</span>
               </label>
-              <Nepali
-                funcname="unicodify"
+              <input
                 name="address"
                 value={userDetails.address}
-                valueChange={(e) => handleInputChange(e)}
+                onChange={(e) => handleNepaliInputChange(e)}
                 type="text"
                 placeholder="ठेगाना"
                 required
