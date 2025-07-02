@@ -17,8 +17,8 @@ export const getUser=async(req,res)=>{
         if(!user){
             return res.status(400).json({msg:"user not found"})
         }
-        const{password:pass,...userDetail}=user._doc
-        res.status(200).json(userDetail)
+        const{password:pass,...userDetails}=user._doc
+        res.status(200).json(userDetails)
     }catch(error){
         res.status(500).json({error:error.message})
     }

@@ -1,7 +1,37 @@
-import React from "react";
+import React,{useContext, useState} from "react";
 import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa";
+import AuthContext from "../context/AuthContext";
+import axios from "axios";
+
 
 const Login = () => {
+  const [credentials,setCredentials]=useState({
+    userName:"",
+    email:"",
+    password:""
+  })
+  const {login}=useContext(AuthContext)
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials((prev) => ({
+      ...prev,          
+      [name]: value,
+    }));
+  }
+  const handleLogin = async(e) => {
+    e.preventDefault();
+    const response= await axios.post('http://localhost:8000/api/user/login', credentials, { withCredentials: true });
+    console.log(response)
+    if (response.status === 200) {
+      localStorage.setItem('authToken', response.data.token);
+      login(); // Call login to sync token
+      setCredentials({
+        userName: "",
+        email: "",
+        password: ""
+      }); 
+    }  
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-8">
       <div className="bg-white shadow-xl rounded-xl flex flex-col md:flex-row w-full max-w-6xl relative">
@@ -41,20 +71,28 @@ const Login = () => {
 
           <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
 
-          <form className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4" onSubmit={handleLogin}>
             <input
               type="text"
               placeholder="Username"
               className="border border-gray-300 rounded-md p-3"
+              name="userName"
+              value={credentials.userName}
+              onChange={handleInputChange}
             />
             <input
               type="password"
               placeholder="Password"
               className="border border-gray-300 rounded-md p-3"
+              name="password"
+              value={credentials.password}  
+              onChange={handleInputChange}
             />
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-sm text-gray-600 gap-2 sm:gap-0">
               <label className="flex items-center gap-2">
-                <input type="checkbox" />
+                <input type="checkbox"
+                className="form-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 rounded-md"
+                 />
                 Remember me
               </label>
               <a href="#" className="text-blue-600 hover:underline">
