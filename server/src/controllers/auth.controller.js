@@ -18,11 +18,9 @@ export const signUp=async(req,res)=>{
             userName,
             password
         })
-       const token= generateToken(newUser._id,newUser.userType)
        res.status(201).json({
         msg:"user created successfully",
         newUser,
-        token
        })
     }catch(error){
         res.status(500).json({ error: error.message });
