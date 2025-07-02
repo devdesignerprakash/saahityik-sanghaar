@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Nepali from 'nepalify-react';
 import axios from 'axios'
+import {toast} from 'react-toastify';
+
 
 const SignUp = () => {
   const [userDetails, setUserDetails] = useState({
@@ -38,12 +40,20 @@ const SignUp = () => {
           }
         )
       }
+      if(response.status === 201){
+        toast.success(response?.data?.msg || "User registered successfully");
+      }
 
     } catch (error) {
-      console.log(error.message)
-    }
+     if (error.response && error.response.status === 400) {
+        toast.error(error.response.data.msg || "User registration failed. Please check your details.")
+      }
+      else{
+        toast.error("An unexpected error occurred. Please try again later.");
+      }
 
-  }
+  } 
+}
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-gray-100 shadow-xl rounded-xl">
@@ -64,6 +74,7 @@ const SignUp = () => {
                 type="text"
                 placeholder="पुरा नाम"
                 name="fullName"
+                value={userDetails.fullName}
                 valueChange={(e) => handleInputChange(e)}
                 required
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -78,6 +89,7 @@ const SignUp = () => {
               <Nepali
                 funcname="unicodify"
                 name="address"
+                value={userDetails.address}
                 valueChange={(e) => handleInputChange(e)}
                 type="text"
                 placeholder="ठेगाना"
