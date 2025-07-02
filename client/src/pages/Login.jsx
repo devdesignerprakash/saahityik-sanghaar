@@ -3,6 +3,8 @@ import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa";
 import AuthContext from "../context/AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {Link} from 'react-router-dom'
+import {toast} from 'react-toastify'
 
 
 
@@ -23,21 +25,33 @@ const Login = () => {
       [name]: value,
     }));
   }
-  const handleLogin = async(e) => {
-    e.preventDefault();
-    const response= await axios.post('http://localhost:8000/api/user/login', credentials, { withCredentials: true });
-    console.log(response)
+  const handleLogin = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await axios.post(
+      'http://localhost:8000/api/user/login',
+      credentials,
+      { withCredentials: true }
+    );
+
     if (response.status === 200) {
       const { token } = response.data;
-      login(token,rememberMe);
+      login(token, rememberMe);
       setCredentials({
         userName: "",
         email: "",
         password: ""
-      }); 
-      navigate('/')
-    }  
-  };
+      });
+      toast.success(response.data.msg || "Login successful");
+      navigate('/');
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    toast.error(
+      error?.response?.data?.msg || "Login failed. Please check your credentials."
+    );
+  }
+};
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-8">
       <div className="bg-white shadow-xl rounded-xl flex flex-col md:flex-row w-full max-w-6xl relative">
@@ -118,9 +132,9 @@ const Login = () => {
             </button>
             <p className="text-sm text-center text-gray-700">
               Not have account yet?{" "}
-              <a href="#" className="text-blue-600 hover:underline">
+              <Link to="/signup" className="text-blue-600 hover:underline">
                 Signup Now
-              </a>
+              </Link>
             </p>
           </form>
         </div>
