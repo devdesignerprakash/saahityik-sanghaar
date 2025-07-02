@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios'
 import {toast} from 'react-toastify';
 import nepalify from "nepalify";
+import {useNavigate} from 'react-router-dom'
 
 const SignUp = () => {
+  const navigate= useNavigate()
   const [userDetails, setUserDetails] = useState({
     fullName: "",
     email: "",
@@ -31,7 +33,6 @@ const SignUp = () => {
     }));
   }
   const handleSubmit = async (e) => {
-    console.log("on handle Clicked")
     e.preventDefault()
     try {
       const response = await axios.post('http://localhost:8000/api/user/signup', userDetails, { withCredentials: true })
@@ -50,6 +51,7 @@ const SignUp = () => {
       }
       if(response.status === 201){
         toast.success(response?.data?.msg || "User registered successfully");
+        navigate("/")
       }
 
     } catch (error) {

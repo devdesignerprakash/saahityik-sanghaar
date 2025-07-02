@@ -25,6 +25,7 @@ const BlogList = () => {
     <>
       {/* Category buttons */}
       <div className="flex justify-center flex-wrap gap-4 mb-8">
+       
         {categories.map((category) => (
           <button
             key={category}
@@ -68,7 +69,9 @@ const BlogList = () => {
             </div>
           </div>
         ))}
+         
       </div>
+      
     </>
   );
 };
