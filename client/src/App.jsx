@@ -17,6 +17,8 @@ function App() {
   useEffect(() => {
     if (user?.userType === 'admin') {
       navigate('/admin');
+    }else{
+      navigate('/');
     }
   }, [user, navigate]);
 

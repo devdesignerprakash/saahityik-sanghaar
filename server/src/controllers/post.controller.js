@@ -4,10 +4,7 @@ import PostType from "../models/postType.model.js";
 // Create Post
 export const createPost = async (req, res) => {
   try {
-    if (req.user.userType !== "admin") {
-      return res.status(403).json({ msg: "Only admin can create post" });
-    }
-
+   
     const { title, postType, content, author} = req.body;
 
     const existPostType = await PostType.findOne({ postType });
