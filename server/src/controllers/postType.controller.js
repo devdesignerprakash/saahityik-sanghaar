@@ -22,9 +22,6 @@ export const createPostType=async(req,res)=>{
 }
 export const getAllPostTypes=async(req,res)=>{
     try{
-        if (req.user.userType !== 'admin') {
-            return res.status(403).json({ msg: 'Only admin can get post types' });
-        }
         const allPostTypes= await PostType.find()
         if(allPostTypes.length>0){
             return res.status(200).json(allPostTypes)
