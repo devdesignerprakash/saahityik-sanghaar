@@ -25,7 +25,6 @@ const optionalImageUpload = (req, res, next) => {
     const uploadMiddleware = upload.single('imageUrl');
 
     uploadMiddleware(req, res, async (err) => {
-        console.log("image comes",req)
         try {
             if (err instanceof multer.MulterError || err) {
                 return res.status(400).json({ error: 'Multer Error', details: err.message });

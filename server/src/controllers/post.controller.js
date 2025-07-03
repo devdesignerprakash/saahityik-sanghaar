@@ -18,7 +18,7 @@ export const createPost = async (req, res) => {
       content,
       author,
       imageUrl:req.imageUrl||null,
-      postedBy: req.user.id, // Assuming req.user contains the logged-in user's info
+      postedBy: req.user.id, 
     });
 
     res.status(201).json({msg:"तपाईँको साहित्य श्रृजना भयो । कृपया प्रकाशित हुनको लागि प्रतिक्षा गर्नुहोस",newPost});
