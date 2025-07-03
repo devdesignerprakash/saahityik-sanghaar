@@ -17,6 +17,9 @@ importers:
       lucide-react:
         specifier: ^0.511.0
         version: 0.511.0(react@19.1.0)
+      nepali-date-converter:
+        specifier: ^3.4.0
+        version: 3.4.0
       nepalify:
         specifier: ^0.5.0
         version: 0.5.0
@@ -1092,6 +1095,10 @@ packages:
 
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
+
+  nepali-date-converter@3.4.0:
+    resolution: {integrity: sha512-hBojNXCQN69I533CnxNubl72uNx2Zcow9t2bOML3CxXv227s7NKA2kStUGO5xysg0SwsubTTxAO6tcg9IhS61w==}
+    engines: {node: '>=6.0.0'}
 
   nepalify@0.5.0:
     resolution: {integrity: sha512-oVXLAWC8zzWCbLIdxTSKTvPXgRQkfbPeCKt2IobgwaW7ff1556xrgUDlb9lq0JiqpzZRBfgpzq3pMyRZwMqfbA==}
@@ -2212,6 +2219,8 @@ snapshots:
   nanoid@3.3.11: {}
 
   natural-compare@1.4.0: {}
+
+  nepali-date-converter@3.4.0: {}
 
   nepalify@0.5.0: {}
 
