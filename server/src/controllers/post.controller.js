@@ -8,7 +8,7 @@ export const createPost = async (req, res) => {
       return res.status(403).json({ msg: "Only admin can create post" });
     }
 
-    const { title, postType, content, author, image } = req.body;
+    const { title, postType, content, author} = req.body;
 
     const existPostType = await PostType.findOne({ postType });
     if (!existPostType) {
@@ -20,10 +20,11 @@ export const createPost = async (req, res) => {
       postType: existPostType._id,
       content,
       author,
-      imageUrl:req.imageUrl||null
+      imageUrl:req.imageUrl||null,
+      postedBy: req.user.id, // Assuming req.user contains the logged-in user's info
     });
 
-    res.status(201).json(newPost);
+    res.status(201).json({msg:"तपाईँको साहित्य श्रृजना भयो । कृपया प्रकाशित हुनको लागि प्रतिक्षा गर्नुहोस",newPost});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
