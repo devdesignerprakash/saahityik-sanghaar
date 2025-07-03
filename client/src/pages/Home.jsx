@@ -22,7 +22,7 @@ const Home = () => {
     <NewsLetter/>
     <Footer/>
     {createPost&&(
-       <CreatePost/>
+       <CreatePost onClose={setCreatePost} post={createPost}/>
     )
     }
    
