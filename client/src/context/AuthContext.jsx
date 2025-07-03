@@ -6,20 +6,24 @@ const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true); // ✅ New state
 
     // Load token on mount
     useEffect(() => {
         const storedToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
         if (storedToken) {
             setToken(storedToken);
+        } else {
+            setIsLoading(false); // ✅ No token = done loading
         }
     }, []);
 
-    // Fetch user whenever token is set
+    // Fetch user when token is set
     useEffect(() => {
         const fetchUser = async () => {
             if (!token) {
                 setUser(null);
+                setIsLoading(false);
                 return;
             }
 
@@ -29,10 +33,12 @@ export const AuthContextProvider = ({ children }) => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                setUser(response.data);
+                setUser(response?.data);
             } catch (error) {
                 console.error('Failed to fetch user:', error);
-                setUser(null); // Make sure to clear on error
+                setUser(null);
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -47,6 +53,7 @@ export const AuthContextProvider = ({ children }) => {
             sessionStorage.setItem('authToken', newToken);
         }
         setToken(newToken);
+        setIsLoading(true); // Force fetchUser again
     }, []);
 
     // Logout
@@ -55,10 +62,11 @@ export const AuthContextProvider = ({ children }) => {
         sessionStorage.removeItem('authToken');
         setToken(null);
         setUser(null);
+        setIsLoading(false);
     }, []);
 
     return (
-        <AuthContext.Provider value={{ token, login, logout, user }}>
+        <AuthContext.Provider value={{ token, login, logout, user, isLoading }}>
             {children}
         </AuthContext.Provider>
     );

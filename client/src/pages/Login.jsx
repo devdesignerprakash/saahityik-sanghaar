@@ -44,7 +44,8 @@ const Login = () => {
       );
 
       if (response.status === 200) {
-        const { token } = response.data;
+     
+        const { token } = response?.data;
         login(token, rememberMe);
         setCredentials({ userName: "", email: "", password: "" });
         toast.success(response.data.msg || "Login successful");
