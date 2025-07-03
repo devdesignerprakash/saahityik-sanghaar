@@ -9,16 +9,15 @@ import SignUp from './pages/SignUp';
 import AdminProtectedRoute from './components/adminComponents/AdminProtectedRoute';
 import AuthContext from './context/AuthContext';
 import { useContext, useEffect } from 'react';
+import ShowALLPosts from './components/adminComponents/ShowALLPosts';
 
 function App() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user?.userType === 'admin') {
+    if (user?.userType === 'admin'&& window.location.pathname === '/') {
       navigate('/admin');
-    }else{
-      navigate('/');
     }
   }, [user, navigate]);
 
@@ -33,7 +32,7 @@ function App() {
 
         {user && user.userType === 'admin' && (
           <Route
-            exact path="/admin"
+             path="/admin"
             element={
               <AdminProtectedRoute>
                 <AdminLayout />
@@ -41,6 +40,7 @@ function App() {
             }
           >
             <Route index element={<Dashboard />} />
+            <Route path="allposts" element={<ShowALLPosts/>} />
           </Route>
         )}
       </Routes>

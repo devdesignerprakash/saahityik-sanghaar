@@ -40,10 +40,10 @@ const AdminNav = () => {
             <Users className="w-5 h-5" />
             प्रयोगकर्ता
           </a>
-          <a href="#" className="flex items-center gap-3 hover:text-blue-600">
+          <Link to="/admin/allposts" className="flex items-center gap-3 hover:text-blue-600">
             <FileText className="w-5 h-5" />
             पोस्टहरू
-          </a>
+          </Link>
           <a href="#" className="flex items-center gap-3 hover:text-blue-600">
             <PenTool className="w-5 h-5" />
             लेखकहरू
