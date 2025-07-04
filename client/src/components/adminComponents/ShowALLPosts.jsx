@@ -127,12 +127,6 @@ const ShowAllPosts = () => {
       {posts.length === 0 ? (
         <div className="text-center p-8">
           <p className="text-gray-500 text-lg">कुनै पोस्ट फेला परेन।</p>
-          <button 
-            onClick={() => navigate('/posts/create')}
-            className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-          >
-            पहिलो पोस्ट सिर्जना गर्नुहोस्
-          </button>
         </div>
       ) : (
         <div className="overflow-x-auto">
