@@ -6,14 +6,14 @@ import Nepali from 'nepalify';
 import { useNavigate } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-
+import CreatePost from './CreatePost';
 const ShowAllPosts = () => {
   const [posts, setPosts] = useState([]);
+  const [openCreatePostPopUp ,setCreatePostPopUp] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
-
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -34,13 +34,22 @@ const ShowAllPosts = () => {
   }, [token]);
 
   const handleEdit = (postId) => {
-    navigate(`/posts/edit/${postId}`);
+    navigate(`/admin/posts/edit/${postId}`);
   };
 
-  const handleView = (postId) => {
-    navigate(`/posts/${postId}`);
-  };
-
+  const handleView = async(postId) => {
+    try{
+     const response = await axios.get(`http://localhost:8000/api/post/getPost/${postId}`, {
+    headers: { Authorization: `Bearer ${token}` },      
+    withCredentials: true,
+  });
+  if(response?.data){
+    navigate(`/admin/post/view/${postId}`, { state: { post: response.data } });
+  } 
+}
+  catch(error){
+    console.log(error)
+  }
   const handleDelete = (postId) => {
     confirmAlert({
       title: 'पोस्ट मेटाउन निश्चित हुनुहुन्छ?',
@@ -120,12 +129,18 @@ const ShowAllPosts = () => {
   }
 
   return (
+    <>
     <div className="bg-white rounded-xl shadow-md">
+      <div className='flex justify-end items-center'>
+         <button className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors mt-4' onClick={() => setCreatePostPopUp(!openCreatePostPopUp)}>
+            नयाँ पोस्ट सिर्जना गर्नुहोस्
+          </button>
+      </div>
       <div className="flex justify-center items-center mb-6">
         <h1 className="text-2xl font-bold text-center">📚 पोस्ट तालिका</h1>
       </div>
       {posts.length === 0 ? (
-        <div className="text-center p-8">
+        <div className="text-center p-8 items-center  flex justify-between">
           <p className="text-gray-500 text-lg">कुनै पोस्ट फेला परेन।</p>
         </div>
       ) : (
@@ -185,7 +200,13 @@ const ShowAllPosts = () => {
         </div>
       )}
     </div>
+  {openCreatePostPopUp&&
+    <CreatePost onClose={setCreatePostPopUp} post={openCreatePostPopUp}/>}
+
+    </>
+   
   );
 };
+  }
 
 export default ShowAllPosts;

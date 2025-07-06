@@ -10,6 +10,7 @@ import AdminProtectedRoute from './components/adminComponents/AdminProtectedRout
 import AuthContext from './context/AuthContext';
 import { useContext, useEffect } from 'react';
 import ShowALLPosts from './components/adminComponents/ShowALLPosts';
+import CreatePost from './components/adminComponents/CreatePost';
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -41,6 +42,7 @@ function App() {
           >
             <Route index element={<Dashboard />} />
             <Route path="allposts" element={<ShowALLPosts/>} />
+            <Rout path='/admin/post/view/:postId' element={<ViewPostContent/>} />
           </Route>
         )}
       </Routes>

@@ -78,6 +78,20 @@ export const published = async (req, res) => {
   }
 };
 
+export const getPostById = async (req, res) => {
+  try {       
+    const { postId } = req.params;
+    const post = await
+      Post.findById(postId).populate("postType", "postType")
+    if (!post) {
+      return res.status(404).json({ msg: "Post not found" });
+    } 
+    res.status(200).json(post);
+  } catch (error) {
+    console.error("Error fetching post:", error);
+  }
+}
+
 // Edit Post
 export const editPost = async (req, res) => {
   try {
