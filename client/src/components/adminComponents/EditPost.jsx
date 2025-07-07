@@ -4,7 +4,7 @@ import AuthContext from "../../context/AuthContext";
 import Nepalify from "nepalify";
 import { toast } from "react-toastify";
 
-const EditPost = ({ onClose, post,openEdit }) => {
+const EditPost = ({ onClose, post, openEdit }) => {
   const { token } = useContext(AuthContext);
   const [postTypes, setPostTypes] = useState([]);
   const [frontendImage, setFrontendImage] = useState(null);
@@ -24,7 +24,7 @@ const EditPost = ({ onClose, post,openEdit }) => {
         title: post.title || "",
         author: post.author || "",
         content: post.content || "",
-        imageUrl: post.imageUrl||null,
+        imageUrl: post.imageUrl || null,
         postType: post.postType || "",
       });
       setFrontendImage(post.imageUrl || null);
@@ -35,12 +35,18 @@ const EditPost = ({ onClose, post,openEdit }) => {
   useEffect(() => {
     const fetchPostTypes = async () => {
       try {
-        const { data } = await axios.get("http://localhost:8000/api/postType/getAllPostTypes", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const { data } = await axios.get(
+          "http://localhost:8000/api/postType/getAllPostTypes",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setPostTypes(data);
       } catch (error) {
-        console.error("Error fetching post types:", error.response?.data || error.message);
+        console.error(
+          "Error fetching post types:",
+          error.response?.data || error.message
+        );
       }
     };
     fetchPostTypes();
@@ -103,7 +109,10 @@ const EditPost = ({ onClose, post,openEdit }) => {
         onClose(!openEdit);
       }
     } catch (error) {
-      toast.error("Error updating post: " + (error.response?.data?.message || error.message));
+      toast.error(
+        "Error updating post: " +
+          (error.response?.data?.message || error.message)
+      );
     }
   };
 
@@ -117,11 +126,16 @@ const EditPost = ({ onClose, post,openEdit }) => {
         <div className="relative w-full max-w-lg bg-white p-6 rounded-lg shadow-lg overflow-auto max-h-[90vh]">
           {/* Close Button */}
           <button
-            onClick={()=>onClose(!openEdit)}
+            onClick={() => onClose(!openEdit)}
             className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 focus:outline-none"
             aria-label="Close"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-6 h-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              className="w-6 h-6"
+            >
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -131,7 +145,9 @@ const EditPost = ({ onClose, post,openEdit }) => {
           </button>
 
           {/* Title */}
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">पोष्ट सम्पादन गर्नुहोस्</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+            पोष्ट सम्पादन गर्नुहोस्
+          </h2>
 
           {/* Form */}
           <form onSubmit={handleSubmit}>
@@ -171,18 +187,25 @@ const EditPost = ({ onClose, post,openEdit }) => {
               className="block w-full mb-4 border border-gray-300 rounded p-2"
               accept="image/*"
             />
-
-            {frontendImage && (
+            {frontendImage ? (
+              // If a new image is selected
               <img
                 src={
                   typeof frontendImage === "string"
-                    ? post.imageUrl
-                    : URL.createObjectURL(frontendImage)
+                    ? frontendImage // already a URL (e.g., from setPreviewImage)
+                    : URL.createObjectURL(frontendImage) // new file selected
                 }
                 alt="Preview"
                 className="mb-4 max-h-40 object-contain rounded"
               />
-            )}
+            ) : post.imageUrl ? (
+              // Show existing post image if no new image selected
+              <img
+                src={post.imageUrl}
+                alt="Existing image"
+                className="mb-4 max-h-40 object-contain rounded"
+              />
+            ) : null}
 
             <select
               name="postType"
@@ -199,7 +222,10 @@ const EditPost = ({ onClose, post,openEdit }) => {
               ))}
             </select>
 
-            <button type="submit" className="w-full bg-green-700 text-white text-lg py-3 rounded hover:bg-green-800">
+            <button
+              type="submit"
+              className="w-full bg-green-700 text-white text-lg py-3 rounded hover:bg-green-800"
+            >
               अपडेट गर्नुहोस्
             </button>
           </form>
