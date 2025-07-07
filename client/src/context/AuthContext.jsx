@@ -18,6 +18,7 @@ export const AuthContextProvider = ({ children }) => {
         }
     }, []);
 
+
     // Fetch user when token is set
     useEffect(() => {
         const fetchUser = async () => {
@@ -44,7 +45,7 @@ export const AuthContextProvider = ({ children }) => {
 
         fetchUser();
     }, [token]);
-
+ 
     // Login
     const login = useCallback((newToken, rememberMe = false) => {
         if (rememberMe) {

@@ -1,50 +1,33 @@
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import Blog from './pages/Blog';
-import NavBar from './components/NavBar';
 import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 import AdminLayout from './components/adminComponents/AdminLayout';
 import Dashboard from './pages/adminPages/Dashboard';
-import SignUp from './pages/SignUp';
-import AdminProtectedRoute from './components/adminComponents/AdminProtectedRoute';
-import AuthContext from './context/AuthContext';
-import { useContext, useEffect } from 'react';
-import ShowALLPosts from './components/adminComponents/ShowALLPosts';
-import CreatePost from './components/adminComponents/CreatePost';
+import ViewPostContent from './components/adminComponents/ViewPostContent';
+import ShowAllContents from './components/adminComponents/ShowAllContents';
 
 function App() {
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user?.userType === 'admin'&& window.location.pathname === '/') {
-      navigate('/admin');
-    }
-  }, [user, navigate]);
-
   return (
     <>
       <NavBar />
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/blog/:title" element={<Blog />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/admin/posts" element={<ShowAllContents />} />
 
-        {user && user.userType === 'admin' && (
-          <Route
-             path="/admin"
-            element={
-              <AdminProtectedRoute>
-                <AdminLayout />
-              </AdminProtectedRoute>
-            }
-          >
-            <Route index element={<Dashboard />} />
-            <Route path="allposts" element={<ShowALLPosts/>} />
-            <Rout path='/admin/post/view/:postId' element={<ViewPostContent/>} />
-          </Route>
-        )}
+
+        {/* Admin routes (protected inside AdminLayout) */}
+        {/* <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="posts" element={<ShowAllContents/>} />
+          <Route path="post/view/:postId" element={<ViewPostContent />} />
+        </Route> */}
       </Routes>
     </>
   );

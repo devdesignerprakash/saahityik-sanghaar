@@ -8,8 +8,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 createRoot(document.getElementById('root')).render(
-  <AuthContextProvider>
+
   <BrowserRouter>
+    <AuthContextProvider>
    <App />
   <ToastContainer
     position="top-right"  
@@ -23,7 +24,8 @@ createRoot(document.getElementById('root')).render(
     pauseOnHover
     theme="light"
   />
+   </AuthContextProvider>
   </BrowserRouter>
-  </AuthContextProvider>
+ 
 
 )

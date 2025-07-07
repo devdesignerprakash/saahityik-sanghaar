@@ -1,7 +1,13 @@
 import React from 'react'
+import {useLocation} from 'react-router-dom'
 
-const ViewPostContent = ({post}) => {
+const ViewPostContent = () => {
+  const location = useLocation();
+  const post = location.state?.post || {}; // Get post from location state or default to empty object
     console.log("********************************",post)
+  if (!post || Object.keys(post).length === 0) {
+    return <div className='text-red-500'>पोस्ट फेला परेन।</div>;
+  }
   return (
     <>
     <div>

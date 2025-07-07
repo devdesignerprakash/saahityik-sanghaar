@@ -1,7 +1,16 @@
 import { Outlet } from "react-router-dom";
 import AdminNav from "./AdminNav"; // Sidebar only
+import { useContext } from "react";
+import AuthContext from "../../context/AuthContext";
 
 const AdminLayout = () => {
+  const {user, isLoading}= useContext(AuthContext)
+  if (isLoading) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
+  if (!user || user.userType !== 'admin') {
+    return <div className="flex items-center justify-center h-screen">Access Denied</div>;
+  }
   return (
     <>
     <div className="flex min-h-screen">
