@@ -1,31 +1,67 @@
-import React from 'react'
-import {useLocation} from 'react-router-dom'
+import React from 'react';
+import { FaTrash, FaEdit } from 'react-icons/fa';
+import Nepali from 'nepalify';
+import { useLocation } from 'react-router-dom';
 
 const ViewPostContent = () => {
-  const location = useLocation();
-  const post = location.state?.post || {}; // Get post from location state or default to empty object
-    console.log("********************************",post.content)
-  if (!post || Object.keys(post).length === 0) {
-    return <div className='text-red-500'>पोस्ट फेला परेन।</div>;
-  }
-  return (
-    <>
-    <div>
-        <h1 className='text-2xl font-bold mb-4'>{post.title}</h1>
-        <p className='text-gray-700 mb-4'>{post.content}</p>
-        <div className='flex justify-between items-center'>
-            <span className='text-sm text-gray-500'>लेखक: {post.author}</span>
-            <span className='text-sm text-gray-500'>मिति: {new Date(post.createdAt).toLocaleDateString()}</span>
-            <button className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>
-                {post.status === 'published' ? 'प्रकाशित' : 'प्रकाशन गर्नुहोस्'}
-            </button>
-            <button className='bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600'>
-                मेटाउनुहोस्                                                                    
-              </button>
-        </div>
-    </div>
-    </>
-  )
-}
+  const location = useLocation()
+  const post= location.state?.post || null;
+  if (!post) return null;
+  const formattedDate = new Date(post.createdAt).toLocaleDateString('ne-NP', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 
-export default ViewPostContent
+  return (
+    <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-6 my-8">
+      {/* Title */}
+      <h1 className="text-3xl font-extrabold mb-4">{post.title}</h1>
+
+      {/* Content */}
+      <article className="whitespace-pre-line mb-6 text-gray-800 leading-relaxed">
+        {post.content}
+      </article>
+
+      {/* Footer: author, date, status/actions */}
+      <div className="flex flex-wrap justify-between items-center gap-4">
+        <div className="text-sm text-gray-600">
+          लेखक: <span className="font-medium">{post.author}</span>
+        </div>
+        <div className="text-sm text-gray-600">
+          मिति: <span className="font-medium">{formattedDate}</span>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          {/* Publish/Unpublish Toggle */}
+          <button
+            className={`px-4 py-2 rounded-full text-sm font-semibold focus:outline-none 
+              ${post.status === 'published'
+                ? 'bg-green-500 text-white hover:bg-green-600'
+                : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+          >
+            {post.status === 'published' ? 'प्रकाशित गरिएको' : 'प्रकाशन गर्नुहोस्'}
+          </button>
+
+          {/* Edit */}
+          <button
+            className="p-2 rounded-full bg-yellow-100 text-yellow-800 hover:bg-yellow-200 focus:outline-none"
+            title="सम्पादन गर्नुहोस्"
+          >
+            <FaEdit />
+          </button>
+
+          {/* Delete */}
+          <button
+            className="p-2 rounded-full bg-red-100 text-red-800 hover:bg-red-200 focus:outline-none"
+            title="मेटाउनुहोस्"
+          >
+            <FaTrash />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ViewPostContent;
