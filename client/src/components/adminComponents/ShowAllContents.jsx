@@ -8,10 +8,13 @@ import Nepali from 'nepalify';
 
 import AuthContext from '../../context/AuthContext';
 import CreatePost from './CreatePost';
+import EditPost from './EditPost';
 
 const ShowAllPosts = () => {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [openEdit,setOpenEdit]=useState(false)
+  const [postToEdit,setPostToEdit]=useState(null)
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -41,8 +44,11 @@ const ShowAllPosts = () => {
     if (token) fetchPosts();
   }, [token]);
 
-  const handleEdit = (postId) => {
-    navigate(`/admin/posts/edit/${postId}`);
+  const handleEdit = (post) => {
+    console.log(post)
+    setPostToEdit(post)
+    setOpenEdit(!openEdit)
+    // navigate(`/admin/posts/edit/${postId}`);
   };
 
   const handleView = async (postId) => {
@@ -173,7 +179,7 @@ const ShowAllPosts = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex space-x-2">
                       <button onClick={() => handleView(post._id)} className="p-1 rounded-full hover:bg-blue-50 text-blue-600" title="हेर्नुहोस्"><FaEye/></button>
-                      <button onClick={() => handleEdit(post._id)} className="p-1 rounded-full hover:bg-green-50 text-green-600" title="सम्पादन गर्नुहोस्"><FaPenFancy/></button>
+                      <button onClick={() => handleEdit(post)} className="p-1 rounded-full hover:bg-green-50 text-green-600" title="सम्पादन गर्नुहोस्"><FaPenFancy/></button>
                       <button onClick={() => handleDelete(post._id)} className="p-1 rounded-full hover:bg-red-50 text-red-600" title="मेटाउनुहोस्"><FaTrash/></button>
                     </div>
                   </td>
@@ -185,6 +191,7 @@ const ShowAllPosts = () => {
       )}
 
       {isCreateOpen && <CreatePost onClose={() => setCreateOpen(false)} />}
+      {openEdit&& <EditPost post={postToEdit} onClose={setOpenEdit} openEdit={openEdit}/>}
     </div>
   );
 };

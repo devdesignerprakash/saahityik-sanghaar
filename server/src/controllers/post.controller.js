@@ -67,7 +67,7 @@ export const published = async (req, res) => {
     }
      existPost.status=status
     existPost.publishedAt = new Date();
-    await existPost.save({new:true});
+    await existPost.save();
     res.status(200).json({ msg: " तपाईँको साहित्य प्रकाशित भयो" ,existPost});
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -94,9 +94,9 @@ export const editPost = async (req, res) => {
     if (req.user.userType !== "admin") {
       return res.status(403).json({ msg: "Only admin can edit post" });
     }
-
-    const { id } = req.params;
-    const { title, content, author, image, postType } = req.body;
+    
+    const { postId } = req.params;
+    const { title, content, author, postType } = req.body;
 
     const existPostType = await PostType.findOne({ postType });
     if (!existPostType) {
@@ -104,11 +104,11 @@ export const editPost = async (req, res) => {
     }
 
     const updatedPost = await Post.findByIdAndUpdate(
-      id,
+      postId,
       {
         title,
         content,
-        image,
+        imageUrl:req.imageUrl||null,
         author,
         postType: existPostType._id,
       },

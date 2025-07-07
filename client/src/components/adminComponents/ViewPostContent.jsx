@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import AuthContext from "../../context/AuthContext";
 import {toast} from 'react-toastify'
-
 const ViewPostContent = () => {
   const location = useLocation();
   const { token } = useContext(AuthContext);
