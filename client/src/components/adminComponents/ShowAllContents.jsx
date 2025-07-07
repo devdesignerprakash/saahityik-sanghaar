@@ -132,14 +132,16 @@ const ShowAllPosts = () => {
 
   return (
     <div className="bg-white rounded-xl shadow-md p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">📚 पोस्ट तालिका</h1>
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        <div className='flex justify-end mb-4'>
+            <button
+          className="bg-blue-500 justify-end text-white px-4 py-2 rounded hover:bg-blue-600"
           onClick={() => setCreateOpen(true)}
         >
           नयाँ पोस्ट सिर्जना गर्नुहोस्
         </button>
+        </div>
+      <div className="flex justify-center items-center mb-4">
+        <h1 className="text-2xl font-bold">📚 पोस्ट तालिका</h1>
       </div>
 
       {posts.length === 0 ? (

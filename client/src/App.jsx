@@ -19,15 +19,12 @@ function App() {
         <Route path="/blog/:title" element={<Blog />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/admin/posts" element={<ShowAllContents />} />
-
-
         {/* Admin routes (protected inside AdminLayout) */}
-        {/* <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="posts" element={<ShowAllContents/>} />
           <Route path="post/view/:postId" element={<ViewPostContent />} />
-        </Route> */}
+        </Route>
       </Routes>
     </>
   );
