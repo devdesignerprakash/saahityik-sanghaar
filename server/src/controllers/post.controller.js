@@ -68,7 +68,7 @@ export const published = async (req, res) => {
      existPost.status=status
     existPost.publishedAt = new Date();
     await existPost.save({new:true});
-    res.status(200).json({ msg: "Post published successfully" ,existPost});
+    res.status(200).json({ msg: " तपाईँको साहित्य प्रकाशित भयो" ,existPost});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

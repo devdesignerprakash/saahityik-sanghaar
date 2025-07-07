@@ -81,7 +81,8 @@ const ShowAllPosts = () => {
         },
         {
           label: 'होईन',
-          onClick: () => {}
+          onClick: () => navigate('/admin/posts')
+          
         }
       ],
       closeOnEscape: true,
