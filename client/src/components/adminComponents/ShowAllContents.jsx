@@ -9,6 +9,7 @@ import Nepali from 'nepalify';
 import AuthContext from '../../context/AuthContext';
 import CreatePost from './CreatePost';
 import EditPost from './EditPost';
+import {toast} from 'react-toastify'
 
 const ShowAllPosts = () => {
   const { token } = useContext(AuthContext);
@@ -74,10 +75,14 @@ const ShowAllPosts = () => {
           label: 'हो',
           onClick: async () => {
             try {
-              await axios.delete(
-                `http://localhost:8000/api/post/deletePost/${postId}`,
+              const response=await axios.delete(
+                `http://localhost:8000/api/post/delete-post/${postId}`,
                 { headers: { Authorization: `Bearer ${token?.trim()}` } }
               );
+              if(response.status===200){
+                toast.success(response.data.msg)
+              }
+            
               setPosts((prev) => prev.filter((p) => p._id !== postId));
             } catch (err) {
               console.error('Error deleting post:', err);
