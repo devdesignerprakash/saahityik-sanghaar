@@ -59,20 +59,16 @@ export const published = async (req, res) => {
     if (req.user.userType !== "admin") {
       return res.status(403).json({ msg: "Only admin can publish post" });
     }
-
-    const { id } = req.params;
+    const { postId } = req.params;
     const {status}=req.body
-
-    const existPost = await Post.findById(id);
+    const existPost = await Post.findById(postId);
     if (!existPost) {
       return res.status(404).json({ msg: "Post not found" });
     }
-
-    existPost.status = status;
+     existPost.status=status
     existPost.publishedAt = new Date();
-    await existPost.save();
-
-    res.status(200).json({ msg: "Post published successfully" });
+    await existPost.save({new:true});
+    res.status(200).json({ msg: "Post published successfully" ,existPost});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
