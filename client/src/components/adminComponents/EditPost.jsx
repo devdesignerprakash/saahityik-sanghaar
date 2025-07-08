@@ -16,7 +16,7 @@ const EditPost = ({ onClose, post, openEdit }) => {
     imageUrl: null,
     postType: "",
   });
-
+  
   // Fill form with existing post values on mount
   useEffect(() => {
     if (post) {
@@ -27,9 +27,10 @@ const EditPost = ({ onClose, post, openEdit }) => {
         imageUrl: post.imageUrl || null,
         postType: post.postType || "",
       });
-      setFrontendImage(post.imageUrl || null);
+      setFrontendImage(post?.imageUrl || null);
     }
   }, [post]);
+  console.log(post.imageUrl)
 
   // Fetch post types
   useEffect(() => {
@@ -158,6 +159,7 @@ const EditPost = ({ onClose, post, openEdit }) => {
               onChange={handleNepaliInputChange}
               placeholder="शीर्षक"
               className="block w-full mb-4 p-3 border border-gray-300 rounded"
+              style={{ fontFamily: "'Noto Sans Devanagari', sans-serif" }}
               required
             />
 
@@ -175,6 +177,7 @@ const EditPost = ({ onClose, post, openEdit }) => {
               name="content"
               value={postContent.content}
               onChange={handleNepaliInputChange}
+              style={{ fontFamily: "'Noto Sans Devanagari', sans-serif" }}
               placeholder="सामग्री लेख्नुहोस्..."
               className="block w-full mb-4 p-3 border border-gray-300 rounded h-32 resize-none"
               required
