@@ -2,7 +2,8 @@ import  { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../../context/AuthContext";
 import { toast } from "react-toastify";
-import { convertRomanToUnicode } from "../../utils/romanized";
+import { convertPreetiToUnicode } from "../../utils/preetiToUnicode";
+
 
 const EditPost = ({ onClose, post, openEdit }) => {
   const { token } = useContext(AuthContext);
@@ -57,7 +58,7 @@ const EditPost = ({ onClose, post, openEdit }) => {
     const { name, value } = e.target;
     setPostContent((prev) => ({
       ...prev,
-      [name]: convertRomanToUnicode(value),
+      [name]: convertPreetiToUnicode(value),
     }));
   };
 
