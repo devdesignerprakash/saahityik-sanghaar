@@ -1,8 +1,8 @@
 import  { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../../context/AuthContext";
-import Nepalify from "nepalify";
 import { toast } from "react-toastify";
+import { convertRomanToUnicode } from "../../utils/romanized";
 
 const EditPost = ({ onClose, post, openEdit }) => {
   const { token } = useContext(AuthContext);
@@ -57,7 +57,7 @@ const EditPost = ({ onClose, post, openEdit }) => {
     const { name, value } = e.target;
     setPostContent((prev) => ({
       ...prev,
-      [name]: Nepalify.format(value),
+      [name]: convertRomanToUnicode(value),
     }));
   };
 
@@ -159,7 +159,6 @@ const EditPost = ({ onClose, post, openEdit }) => {
               onChange={handleNepaliInputChange}
               placeholder="शीर्षक"
               className="block w-full mb-4 p-3 border border-gray-300 rounded"
-              style={{ fontFamily: "'Noto Sans Devanagari', sans-serif" }}
               required
             />
 
