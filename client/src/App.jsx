@@ -8,6 +8,7 @@ import AdminLayout from './components/adminComponents/AdminLayout';
 import Dashboard from './pages/adminPages/Dashboard';
 import ViewPostContent from './components/adminComponents/ViewPostContent';
 import ShowAllContents from './components/adminComponents/ShowAllContents';
+import BlogTypes from './pages/adminPages/BlogTypes';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="posts" element={<ShowAllContents/>} />
           <Route path="post/view/:postId" element={<ViewPostContent />} />
+          <Route path='postTypes' element={<BlogTypes/>}/>
         </Route>
       </Routes>
     </>

@@ -4,12 +4,13 @@ import {
   LayoutDashboard,
   Users,
   FileText,
-  PenTool,
+ FolderPen,
   Settings,
   Menu,
   X
 } from "lucide-react";
 
+<FolderPen />
 const AdminNav = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -44,10 +45,10 @@ const AdminNav = () => {
             <FileText className="w-5 h-5" />
             पोस्टहरू
           </Link>
-          <a href="#" className="flex items-center gap-3 hover:text-blue-600">
-            <PenTool className="w-5 h-5" />
-            लेखकहरू
-          </a>
+          <Link to='/admin/postTypes' className="flex items-center gap-3 hover:text-blue-600">
+            <FolderPen className="w-5 h-5" />
+           साहित्यका प्रकारहरु 
+          </Link>
           <a href="#" className="flex items-center gap-3 hover:text-blue-600">
             <Settings className="w-5 h-5" />
             सेटिङ
