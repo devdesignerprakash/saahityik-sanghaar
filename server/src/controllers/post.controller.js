@@ -46,7 +46,7 @@ export const getPosts = async (req, res) => {
 // Get Published Posts
 export const getPublishedPosts = async (req, res) => {
   try {
-    const publishedPosts = await Post.find({ status: "published" });
+    const publishedPosts = await Post.find({ status: "published" }).populate('postType','postType labelName');
     res.status(200).json(publishedPosts);
   } catch (error) {
     res.status(500).json({ error: error.message });

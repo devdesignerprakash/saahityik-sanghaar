@@ -17,7 +17,7 @@ const NavBar = () => {
       {/* Logo */}
       <div className="cursor-pointer flex gap-2 text-2xl font-bold" onClick={() => navigate("/")}>
         <span className="text-red-600">साहित्यिक</span>
-        <span className="text-blue-700">संघार</span>
+        <span className="text-blue-700">सँघार</span>
       </div>
 
       {/* Right-side */}

@@ -5,7 +5,7 @@ const Header = () => {
     <>
       <div className="px-4 sm:px-8 xl:px-24 py-12 relative max-w-4xl mx-auto text-center">
         <h1 className="text-3xl sm:text-4xl xl:text-5xl font-bold text-red-600">
-          स्वागत छ — साहित्यिक संघारमा
+          स्वागत छ — साहित्यिक सँघारमा
         </h1>
 
         <p className="mt-6 text-base sm:text-lg text-gray-800 leading-relaxed">
