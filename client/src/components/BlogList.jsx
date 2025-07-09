@@ -29,17 +29,18 @@ useEffect(()=>{
     }
   }
   fetchPublishedPost()
-},[])
+},[token])
 
   const [selectedCategory, setSelectedCategory] = useState("सबै");
   const [literatureMenu,setLiteratureMenu] = useState([]);
-  const categories = ["सबै", ...new Set(literatureMenu.map(item => item?.postType))];
+  const categories = ["सबै", ...new Set(literatureMenu.map(item => item?.postType?.labelName))];
   console.log(literatureMenu)
 
   // Filter literature based on category selection
   const filteredLiterature = selectedCategory === "सबै" 
     ? literatureMenu 
-    : literatureMenu.filter(item => item?.postType === selectedCategory);
+    : literatureMenu.filter(item => item?.postType?.labelName === selectedCategory);
+  
 
   return (
     <>
@@ -63,11 +64,11 @@ useEffect(()=>{
        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4">
         {filteredLiterature.map((item) => (
           <div
-            key={item?.postType}
+            key={item?.postType?.lableName}
             className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col hover:shadow-xl transition-shadow duration-300"
           >
             <img
-              src={item.imageUrl}
+              src={item?.imageUrl}
               alt={item.title}
               className="w-full h-full object-fill"
             />
@@ -75,7 +76,7 @@ useEffect(()=>{
               <div className="flex justify-between items-center mb-2">
                 <h2 className="text-xl font-bold">{item?.title}</h2>
                 <span className="text-sm bg-blue-100 text-blue-700 px-2 py-1 rounded-full whitespace-nowrap">
-                  {item?.postType}
+                  {item?.postType?.labelName}
                 </span>
               </div>
               <h3 className="text-gray-700 mb-2">लेखक: {item?.author}</h3>
