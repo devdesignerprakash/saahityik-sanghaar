@@ -1,8 +1,8 @@
-import  { useEffect, useState, useContext } from "react";
+import  { useEffect, useState, useContext, useRef } from "react";
 import axios from "axios";
 import AuthContext from "../../context/AuthContext";
 import { toast } from "react-toastify";
-import { convertPreetiToUnicode } from "../../utils/preetiToUnicode";
+import { convertToNepaliUnicode } from "../../utils/preetiToUnicode";
 
 
 const EditPost = ({ onClose, post, openEdit }) => {
@@ -17,6 +17,8 @@ const EditPost = ({ onClose, post, openEdit }) => {
     imageUrl: null,
     postType: "",
   });
+  //inputref 
+  const inputRef= useRef(null)
   
   // Fill form with existing post values on mount
   useEffect(() => {
@@ -31,7 +33,7 @@ const EditPost = ({ onClose, post, openEdit }) => {
       setFrontendImage(post?.imageUrl || null);
     }
   }, [post]);
-  console.log(post.imageUrl)
+  
 
   // Fetch post types
   useEffect(() => {
@@ -55,10 +57,12 @@ const EditPost = ({ onClose, post, openEdit }) => {
   }, [token]);
 
   const handleNepaliInputChange = (e) => {
+
     const { name, value } = e.target;
+    const convertedText=convertToNepaliUnicode(value)
     setPostContent((prev) => ({
       ...prev,
-      [name]: convertPreetiToUnicode(value),
+      [name]: convertedText
     }));
   };
 
@@ -157,7 +161,7 @@ const EditPost = ({ onClose, post, openEdit }) => {
               type="text"
               name="title"
               value={postContent.title}
-              onChange={handleNepaliInputChange}
+              onChange= {handleNepaliInputChange}
               placeholder="शीर्षक"
               className="block w-full mb-4 p-3 border border-gray-300 rounded"
               required
@@ -177,7 +181,6 @@ const EditPost = ({ onClose, post, openEdit }) => {
               name="content"
               value={postContent.content}
               onChange={handleNepaliInputChange}
-              style={{ fontFamily: "'Noto Sans Devanagari', sans-serif" }}
               placeholder="सामग्री लेख्नुहोस्..."
               className="block w-full mb-4 p-3 border border-gray-300 rounded h-32 resize-none"
               required
@@ -239,3 +242,4 @@ const EditPost = ({ onClose, post, openEdit }) => {
 };
 
 export default EditPost;
+
