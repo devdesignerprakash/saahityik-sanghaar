@@ -6,7 +6,7 @@ import optionalImageUpload from '../middlewares/image.middleware.js'
 const postRouter= express.Router()
 postRouter.post('/create-post',verifyToken,optionalImageUpload,createPost)
 postRouter.put('/update-post/:postId',verifyToken,optionalImageUpload,editPost)
-postRouter.get('/getPublishedPost',verifyToken,getPublishedPosts)
+postRouter.get('/getPublishedPost',getPublishedPosts)
 postRouter.get('/getPost/:postId',verifyToken,getPostById)
 postRouter.get('/getPosts',verifyToken,getPosts)
 postRouter.patch('/published/:postId',verifyToken,published)

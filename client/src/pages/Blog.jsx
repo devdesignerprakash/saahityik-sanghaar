@@ -2,8 +2,12 @@ import React from "react";
 import { FaPenFancy, FaFacebook, FaTwitter, FaWhatsapp } from "react-icons/fa";
 import { GrLike } from "react-icons/gr";
 import Footer from "../components/footer";
+import { useLocation } from "react-router-dom";
 
 const Blog = () => {
+  const location=useLocation()
+  const{ postData}=location.state||{}
+ 
   const publishedDate = "२०२५ जेष्ठ १५"; // You can also use new Date().toLocaleDateString() for dynamic
 
   return (
@@ -12,22 +16,22 @@ const Blog = () => {
         <div className="w-full max-w-4xl bg-white shadow-md rounded-lg p-6">
           {/* Title */}
           <h1 className="text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800">
-            पागल
+            {postData?.title}
           </h1>
 
           {/* Published Date */}
           <p className="text-center text-sm text-gray-500 mb-4">
-            प्रकाशित मिति: {publishedDate}
+            प्रकाशित मिति: {postData?.publishedAt}
           </p>
 
           {/* Author Info */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
             <FaPenFancy className="text-red-600 text-xl" />
             <span className="text-lg font-medium text-gray-700">
-              लक्ष्मीप्रसाद देवकोटा
+              {postData?.author}
             </span>
             <img
-              src="https://www.lensnepal.com/files/profiles/laxmi-prasad-devkota.jpg"
+              src={postData?.imageUrl}
               alt="Laxmi Prasad Devkota"
               className="w-12 h-12 rounded-full object-cover"
             />
@@ -35,8 +39,7 @@ const Blog = () => {
 
           {/* Poem Content */}
           <p className="text-gray-800 leading-8 whitespace-pre-wrap text-justify">
-            {`जरुर साथी म पागल ! ...
-यस्तै छ मेरो हाल !`} {/* truncated for brevity */}
+           {postData?.content}
           </p>
         </div>
       </div>

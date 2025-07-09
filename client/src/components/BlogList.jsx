@@ -10,10 +10,6 @@ useEffect(()=>{
   const fetchPublishedPost=async()=>{
     try{
       const response= await axios.get(`http://localhost:8000/api/post/getPublishedPost`,{
-        headers:{
-          Authorization:`Bearer ${token.trim()}`
-        }
-      },{
         withCredentials:true
       })
       // console.log(response)
@@ -84,6 +80,7 @@ useEffect(()=>{
               <Link
                 to={`/blog/${item.title}`}
                 className="mt-4 inline-block text-blue-600 hover:text-blue-800 font-semibold"
+                state={{postData:item}}
               >
                 थप पढ्नुहोस् &rarr;
               </Link>
