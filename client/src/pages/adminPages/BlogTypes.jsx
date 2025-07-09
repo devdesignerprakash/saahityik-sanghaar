@@ -6,8 +6,11 @@ import AuthContext from '../../context/AuthContext'
 import { useState } from 'react'
 import { FaPenFancy, FaTrash } from 'react-icons/fa';
 import AddOrEditType from '../../components/adminComponents/AddOrEditType'
-
+import { confirmAlert } from "react-confirm-alert";
+import { useNavigate } from 'react-router-dom'
+import { toast } from "react-toastify";
 const BlogTypes = () => {
+  const navigate= useNavigate()
     const {token}=useContext(AuthContext)
     const [postTypes,setPostTypes]=useState([])
     const[postTypeToEdit,setPostTypeToEdit]=useState(null)
@@ -28,7 +31,7 @@ const BlogTypes = () => {
         }
         fetchTypes()
 
-    },[postTypes])
+    },[setPostTypes])
     const handleEdit=(postType)=>{
       setPostTypeToEdit(postType)
       setOpenAddorEdit(!openAddorEdit)
@@ -37,10 +40,50 @@ const BlogTypes = () => {
       setPostTypeToEdit(null)
       setOpenAddorEdit(!openAddorEdit)
     }
-    const handleDeletePostType=()=>{
-      console.log("on progress")
-      
+    const handleDeletePostType=async(postTypeId)=>{
+       confirmAlert({
+      title: "पोस्ट मेटाउन निश्चित हुनुहुन्छ?",
+      message: "यो कार्य पछि फिर्ता गर्न सकिँदैन।",
+      buttons: [
+        {
+          label: "हो",
+          onClick: async () => {
+            try {
+              const response = await axios.delete(
+                `http://localhost:8000/api/postType/deletePostType/${postTypeId}`,
+                { headers: { Authorization: `Bearer ${token?.trim()}` } }
+              );
+              if (response.status === 200) {
+                toast.success("सफलतापुर्वक हटाइयो");
+              }
 
+              setPostTypes((prev) => prev.filter((p) => p._id !== postTypeId));
+            } catch (err) {
+              console.error("Error deleting post:", err);
+              setError("पोस्ट मेटाउन असफल भयो");
+            }
+          },
+        },
+        {
+          label: "होईन",
+          onClick: () => navigate("/admin/postTypes"),
+        },
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+    });
+      
+      // try{
+      //   const response= await axios.delete(`http://localhost:8000/api/postType/deletePostType/${postTypeId}`,{
+      //     headers:{
+      //       Authorization:`Bearer ${token.trim()}`
+      //     }
+      //   },{
+      //     withCredentials:true
+      //   })
+        
+      // }catch(error){
+      // }
     }
   return (
     <>
@@ -65,7 +108,7 @@ const BlogTypes = () => {
                 <FaPenFancy />
               </button>
               <button
-                // onClick={() => onDelete(post)}
+                onClick={() => handleDeletePostType(post._id)}
                 className="text-red-600 hover:text-red-800"
                 title="मेटाउनुहोस्"
               >

@@ -5,7 +5,6 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { FaPenFancy, FaTrash, FaEye, FaCheck, FaTimes } from "react-icons/fa";
 import Nepali from "nepalify";
-
 import AuthContext from "../../context/AuthContext";
 import CreatePost from "./CreatePost";
 import EditPost from "./EditPost";
@@ -46,7 +45,7 @@ const ShowAllPosts = () => {
     };
 
     if (token) fetchPosts();
-  }, [token,setPosts]);
+  }, [token]);
 
   const handleEdit = (post) => {
     setPostToEdit(post);
@@ -175,7 +174,7 @@ const ShowAllPosts = () => {
       {posts.length === 0 ? (
         <p className="text-gray-500 text-center">कुनै पोस्ट फेला परेन।</p>
       ) : (
-        <div className="overflow-x-auto">
+        <div className="w-full max-w-full overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
