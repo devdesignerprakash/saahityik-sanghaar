@@ -40,7 +40,7 @@ useEffect(()=>{
     const trimContent=(text)=>{
     if(!text) return "";
     const words= text.split(" ")
-    return words.slice(0,25).join(" ")+(words.length>100?"....":"")
+    return words.slice(0,40).join(" ")+(words.length>40?"....":"")
 
   }
   
