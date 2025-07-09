@@ -46,7 +46,7 @@ const ShowAllPosts = () => {
     };
 
     if (token) fetchPosts();
-  }, [token]);
+  }, [token,setPosts]);
 
   const handleEdit = (post) => {
     setPostToEdit(post);

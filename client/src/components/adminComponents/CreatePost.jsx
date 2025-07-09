@@ -6,10 +6,8 @@ import {toast} from "react-toastify";
 
 const CreatePost = ({ onClose, post }) => {
   const { token } = useContext(AuthContext);
-
   const [postTypes, setPostTypes] = useState([]);
   const [frontendImage, setFrontendImage] = useState(null);
-
   const [postContent, setPostContent] = useState({
     title: "",
     author: "",
