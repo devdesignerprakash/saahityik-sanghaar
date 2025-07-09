@@ -27,6 +27,7 @@ useEffect(()=>{
   fetchPublishedPost()
 },[token])
 
+
   const [selectedCategory, setSelectedCategory] = useState("सबै");
   const [literatureMenu,setLiteratureMenu] = useState([]);
   const categories = ["सबै", ...new Set(literatureMenu.map(item => item?.postType?.labelName))];
@@ -36,6 +37,12 @@ useEffect(()=>{
   const filteredLiterature = selectedCategory === "सबै" 
     ? literatureMenu 
     : literatureMenu.filter(item => item?.postType?.labelName === selectedCategory);
+    const trimContent=(text)=>{
+    if(!text) return "";
+    const words= text.split(" ")
+    return words.slice(0,25).join(" ")+(words.length>100?"....":"")
+
+  }
   
 
   return (
@@ -76,7 +83,7 @@ useEffect(()=>{
                 </span>
               </div>
               <h3 className="text-gray-700 mb-2">लेखक: {item?.author}</h3>
-              <p className="text-gray-600 flex-grow">{item?.content}</p>
+              <p className="text-gray-600 flex-grow">{trimContent(item?.content)}</p>
               <Link
                 to={`/blog/${item.title}`}
                 className="mt-4 inline-block text-blue-600 hover:text-blue-800 font-semibold"

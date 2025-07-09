@@ -8,8 +8,8 @@ const Blog = () => {
   const location=useLocation()
   const{ postData}=location.state||{}
  
-  const publishedDate = "२०२५ जेष्ठ १५"; // You can also use new Date().toLocaleDateString() for dynamic
-
+  const publishedDate = "२०२५ जेष्ठ १५"; 
+  
   return (
     <>
       <div className="flex justify-center px-4 py-8 bg-gray-100">
