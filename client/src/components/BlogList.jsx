@@ -43,8 +43,6 @@ useEffect(()=>{
     return words.slice(0,40).join(" ")+(words.length>40?"....":"")
 
   }
-  
-
   return (
     <>
       {/* Category buttons */}

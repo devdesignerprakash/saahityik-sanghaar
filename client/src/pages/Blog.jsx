@@ -3,12 +3,18 @@ import { FaPenFancy, FaFacebook, FaTwitter, FaWhatsapp } from "react-icons/fa";
 import { GrLike } from "react-icons/gr";
 import Footer from "../components/footer";
 import { useLocation } from "react-router-dom";
+import NepaliDate from 'nepali-date'
 
 const Blog = () => {
   const location=useLocation()
   const{ postData}=location.state||{}
  
-  const publishedDate = "२०२५ जेष्ठ १५"; 
+  const dateConverter=(date) =>{
+    const adDate = new Date(date);
+    const nepaliDate = new NepaliDate(adDate)
+    const formatted=nepaliDate.format('yyyy mmmm d')
+    return formatted
+  } 
   
   return (
     <>
@@ -21,7 +27,7 @@ const Blog = () => {
 
           {/* Published Date */}
           <p className="text-center text-sm text-gray-500 mb-4">
-            प्रकाशित मिति: {postData?.publishedAt}
+            प्रकाशित मिति: {dateConverter(postData?.publishedAt)}
           </p>
 
           {/* Author Info */}
