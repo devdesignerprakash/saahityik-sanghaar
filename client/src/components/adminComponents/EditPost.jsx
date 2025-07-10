@@ -3,12 +3,15 @@ import axios from "axios";
 import AuthContext from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import { convertToNepaliUnicode } from "../../utils/preetiToUnicode";
+import { useLayoutEffect } from "react";
 
 
 const EditPost = ({ onClose, post, openEdit }) => {
   const { token } = useContext(AuthContext);
   const [postTypes, setPostTypes] = useState([]);
   const [frontendImage, setFrontendImage] = useState(null);
+  const [cursorPosition, setCursorPosition] = useState(null);
+ 
 
   const [postContent, setPostContent] = useState({
     title: "",
@@ -17,8 +20,9 @@ const EditPost = ({ onClose, post, openEdit }) => {
     imageUrl: null,
     postType: "",
   });
-  //inputref 
+  //inputref  to fix cursor position
   const inputRef= useRef(null)
+ 
   
   // Fill form with existing post values on mount
   useEffect(() => {
@@ -33,6 +37,12 @@ const EditPost = ({ onClose, post, openEdit }) => {
       setFrontendImage(post?.imageUrl || null);
     }
   }, [post]);
+useLayoutEffect(() => {
+  if (inputRef.current && cursorPosition !== null) {
+    inputRef.current.selectionStart = cursorPosition;
+    inputRef.current.selectionEnd = cursorPosition;
+  }
+}, [cursorPosition]);
   
 
   // Fetch post types
@@ -57,13 +67,14 @@ const EditPost = ({ onClose, post, openEdit }) => {
   }, [token]);
 
   const handleNepaliInputChange = (e) => {
-
     const { name, value } = e.target;
+     const position = e.target.selectionStart;
     const convertedText=convertToNepaliUnicode(value)
     setPostContent((prev) => ({
       ...prev,
       [name]: convertedText
     }));
+    setCursorPosition(position)
   };
 
   const handleInputChange = (e) => {
@@ -183,6 +194,7 @@ const EditPost = ({ onClose, post, openEdit }) => {
               onChange={handleNepaliInputChange}
               placeholder="सामग्री लेख्नुहोस्..."
               className="block w-full mb-4 p-3 border border-gray-300 rounded h-32 resize-none"
+              ref={inputRef}
               required
             />
 
