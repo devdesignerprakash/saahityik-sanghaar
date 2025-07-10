@@ -175,6 +175,7 @@ useLayoutEffect(() => {
               onChange= {handleNepaliInputChange}
               placeholder="शीर्षक"
               className="block w-full mb-4 p-3 border border-gray-300 rounded"
+              ref={inputRef}
               required
             />
 
@@ -185,6 +186,7 @@ useLayoutEffect(() => {
               onChange={handleNepaliInputChange}
               placeholder="लेखकको नाम"
               className="block w-full mb-4 p-3 border border-gray-300 rounded"
+              ref={inputRef}
               required
             />
 
@@ -203,6 +205,7 @@ useLayoutEffect(() => {
               onChange={handleImageChange}
               name="imageUrl"
               className="block w-full mb-4 border border-gray-300 rounded p-2"
+              ref={inputRef}
               accept="image/*"
             />
             {frontendImage ? (
