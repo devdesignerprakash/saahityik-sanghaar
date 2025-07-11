@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext,useRef } from "react";
 import axios from "axios";
 import AuthContext from "../../context/AuthContext";
 import Nepalify from "nepalify";
 import {toast} from "react-toastify";
+import { useLayoutEffect } from "react";
 
 const CreatePost = ({ onClose, post }) => {
   const { token } = useContext(AuthContext);
@@ -15,6 +16,9 @@ const CreatePost = ({ onClose, post }) => {
     imageUrl: null,
     postType: "",
   });
+  //cursor poistion 
+   const [cursorPosition, setCursorPosition] = useState(null);
+ 
 
   // Fetch post types on mount
   useEffect(() => {
@@ -32,22 +36,35 @@ const CreatePost = ({ onClose, post }) => {
     fetchPostTypes();
   }, [token]);
 
+   //inputref  to fix cursor position
+  const inputRef= useRef(null)
+  useLayoutEffect(() => {
+  if (inputRef.current && cursorPosition !== null) {
+    inputRef.current.selectionStart = cursorPosition;
+    inputRef.current.selectionEnd = cursorPosition;
+  }
+}, [cursorPosition]);
+
   // Handle input changes for Nepali-formatted fields
   const handleNepaliInputChange = (e) => {
     const { name, value } = e.target;
+     const position = e.target.selectionStart;
     setPostContent((prev) => ({
       ...prev,
       [name]: Nepalify.format(value),
     }));
+    setCursorPosition(position)
   };
 
   // Handle other input fields
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const position=e.target.selectionStart;
     setPostContent((prev) => ({
       ...prev,
       [name]: value,
     }));
+    setCursorPosition(position)
   };
 
   // Handle image file selection
@@ -126,6 +143,7 @@ formData.append("postType", postContent.postType);
               onChange={handleNepaliInputChange}
               placeholder="शीर्षक"
               className="block w-full mb-4 p-3 border border-gray-300 rounded"
+              ref={inputRef}
               required
             />
 
@@ -136,6 +154,7 @@ formData.append("postType", postContent.postType);
               onChange={handleNepaliInputChange}
               placeholder="लेखकको नाम"
               className="block w-full mb-4 p-3 border border-gray-300 rounded"
+              ref={inputRef}
               required
             />
 
@@ -145,6 +164,7 @@ formData.append("postType", postContent.postType);
               onChange={handleNepaliInputChange}
               placeholder="सामग्री लेख्नुहोस्..."
               className="block w-full mb-4 p-3 border border-gray-300 rounded h-32 resize-none"
+              ref={inputRef}
               required
             />
 

@@ -78,11 +78,13 @@ useLayoutEffect(() => {
   };
 
   const handleInputChange = (e) => {
+     const position = e.target.selectionStart;
     const { name, value } = e.target;
     setPostContent((prev) => ({
       ...prev,
       [name]: value,
     }));
+    setCursorPosition(position)
   };
 
   const handleImageChange = (e) => {
