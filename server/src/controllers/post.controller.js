@@ -47,7 +47,8 @@ export const getPosts = async (req, res) => {
 export const getPublishedPosts = async (req, res) => {
   try {
     const publishedPosts = await Post.find({ status: "published" })
-    .populate('postType','postType labelName');
+    .populate('postType','postType labelName')
+    .populate('comments.user','fullName');
     res.status(200).json(publishedPosts);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -182,10 +183,11 @@ export const likes = async (req, res) => {
 
 // Add Comment
 export const comments = async (req, res) => {
+  console.log("comment request",req.body)
   try {
     const { id: userId } = req.user;
     const { postId } = req.params;
-    const {comment } = req.body;
+    const {text:comment } = req.body.comment;
 
     if (!comment || comment.trim() === "") {
       return res.status(400).json({ msg: "Comment cannot be empty" });
