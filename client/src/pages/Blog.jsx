@@ -2,10 +2,15 @@ import React from "react";
 import { FaPenFancy, FaFacebook, FaTwitter, FaWhatsapp } from "react-icons/fa";
 import { GrLike } from "react-icons/gr";
 import Footer from "../components/footer";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import NepaliDate from 'nepali-date'
+import { useContext } from "react";
+import AuthContext from "../context/AuthContext";
+import {toast} from 'react-toastify'
 
 const Blog = () => {
+  const {token}=useContext(AuthContext)
+  const navigate=useNavigate()
   const location=useLocation()
   const{ postData}=location.state||{}
  
@@ -15,6 +20,12 @@ const Blog = () => {
     const formatted=nepaliDate.format('yyyy mmmm d')
     return formatted
   } 
+  const handleFocus=(e)=>{
+    if(!token){
+      toast.warning("कृपया लगईन गर्नुहोस")
+      navigate("/login") 
+    }
+  }
   
   return (
     <>
@@ -57,6 +68,7 @@ const Blog = () => {
           <textarea
             placeholder="Add a comment..."
             className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring focus:ring-blue-200 resize-none"
+            onFocus={handleFocus}
             rows="3"
           />
           <button
