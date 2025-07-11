@@ -67,7 +67,14 @@ const Blog = () => {
     }
   }
   console.log('post details daa', postData)
-
+  //reactions
+// const reactions = [
+//   { id: "happy", emoji: "😄", label: "खुसी", percent: 50 },
+//   { id: "sad", emoji: "😢", label: "दुखी", percent: 0 },
+//   { id: "confused", emoji: "🤔", label: "अविभिक्त", percent: 0 },
+//   { id: "excited", emoji: "🤩", label: "उत्साहित", percent: 0 },
+//   { id: "angry", emoji: "😠", label: "आक्रोशित", percent: 50 },
+// ];
   return (
     <>
       <div className="flex justify-center px-4 py-8 bg-gray-100">
@@ -123,7 +130,32 @@ const Blog = () => {
           </button>
         </form>
 
-        {/* Existing Comments */}
+        {/* reaction sections */}
+        {/* <div className="bg-white shadow-sm rounded-lg p-6 mt-8 max-w-3xl mx-auto">
+  <h3 className="text-lg font-semibold text-center mb-6 text-gray-700">
+    यो कविता पढेर तपाईंलाई कस्तो महसुस भयो?
+  </h3>
+  
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 justify-items-center">
+    {reactions.map((reaction) => (
+      <div
+        key={reaction.id}
+        className="flex flex-col items-center justify-center gap-2 w-full text-center"
+      >
+        <div className="text-3xl">{reaction.emoji}</div>
+        <div className="text-sm font-medium text-gray-600">{reaction.label}</div>
+        <div className="relative w-full h-2 bg-gray-200 rounded-full">
+          <div
+            className="absolute top-0 left-0 h-2 bg-blue-500 rounded-full"
+            style={{ width: `${reaction.percent}%` }}
+          />
+        </div>
+        <span className="text-xs text-gray-500">{reaction.percent}%</span>
+      </div>
+    ))}
+  </div>
+</div> */}
+
         {/* Existing Comments */}
         <div className="mb-8 max-w-4xl mx-auto px-4">
           <div className="flex items-center justify-between mb-6 border-b border-gray-300 pb-2">
