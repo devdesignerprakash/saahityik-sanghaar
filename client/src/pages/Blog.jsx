@@ -22,7 +22,7 @@ const Blog = () => {
   } 
   const handleFocus=(e)=>{
     if(!token){
-      toast.warning("कृपया लगईन गर्नुहोस")
+      toast.info("कृपया लगईन गर्नुहोस")
       navigate("/login") 
     }
   }
