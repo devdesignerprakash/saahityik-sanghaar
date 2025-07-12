@@ -183,7 +183,7 @@ export const likes = async (req, res) => {
 
 // Add Comment
 export const comments = async (req, res) => {
-  console.log("comment request",req.body)
+ const io=req.app.get('io')
   try {
     const { id: userId } = req.user;
     const { postId } = req.params;
@@ -208,7 +208,11 @@ export const comments = async (req, res) => {
     if (!updatedPost) {
       return res.status(400).json({ msg: "Cannot add comment to post" });
     }
-
+    const populatedComment= await Post.populate(newComment,{path:'comments.user',select:'fullName'})
+    io.emit('newComment',{
+      postId,
+      comment:populatedComment
+    })
     res.status(200).json({ msg: "Comment added successfully", comment: newComment });
   } catch (error) {
     res.status(500).json({ error: error.message });

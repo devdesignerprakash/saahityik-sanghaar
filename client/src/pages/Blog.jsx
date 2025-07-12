@@ -8,6 +8,7 @@ import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { socket } from "../utils/socket";
 const Blog = () => {
   const { token } = useContext(AuthContext)
   const [comment, setComment] = useState({
@@ -18,10 +19,30 @@ const Blog = () => {
   const { postData } = location.state || {}
   const [postDetails, setPostDetails] = useState(null)
   useEffect(() => {
-    if (postData) {
-      setPostDetails(postData)
-    }
-  }, [])
+  if (postData) {
+    setPostDetails(postData)
+
+    // Join post room
+    socket.emit('joinPostRoom', postData._id)
+
+    // Listen for new comment
+    socket.on('newComment', ({ postId, comment }) => {
+      console.log('checked from scoked',postId)
+      if (postId === postData._id) {
+        setPostDetails(prev =>({
+          
+          ...prev,
+          comments: [...(prev?.comments || []), comment]
+        }))
+      }
+    })
+  }
+  
+
+  return () => {
+    socket.off('newComment')
+  }
+}, [postData])
 
   const dateConverter = (dateString) => {
     try {
@@ -66,7 +87,8 @@ const Blog = () => {
       console.log(error)
     }
   }
-  console.log('post details daa', postData)
+  // console.log('post details daa', postData)
+  console.log('postDetailsafter comment',postDetails)
   //reactions
 // const reactions = [
 //   { id: "happy", emoji: "😄", label: "खुसी", percent: 50 },
