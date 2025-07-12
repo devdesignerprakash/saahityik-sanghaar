@@ -20,14 +20,20 @@ const Blog = () => {
   const [postDetails, setPostDetails] = useState(null)
   useEffect(() => {
   if (postData) {
-    setPostDetails(postData)
-
+    const fetchPost=async()=>{
+      try{
+        const response= await axios.get(`http://localhost:8000/api/post/getPost/${postData._id}`,{withCredentials:true})
+        setPostDetails(response?.data)
+      }catch(error){
+        console.log(error)
+      }
+    }
+    fetchPost()
     // Join post room
     socket.emit('joinPostRoom', postData._id)
 
     // Listen for new comment
     socket.on('newComment', ({ postId, comment }) => {
-      console.log('checked from scoked',postId)
       if (postId === postData._id) {
         setPostDetails(prev =>({
           
@@ -35,14 +41,13 @@ const Blog = () => {
           comments: [...(prev?.comments || []), comment]
         }))
       }
+      console.log(postDetails)
     })
   }
-  
-
   return () => {
     socket.off('newComment')
   }
-}, [postData])
+}, [])
 
   const dateConverter = (dateString) => {
     try {
@@ -87,8 +92,6 @@ const Blog = () => {
       console.log(error)
     }
   }
-  // console.log('post details daa', postData)
-  console.log('postDetailsafter comment',postDetails)
   //reactions
 // const reactions = [
 //   { id: "happy", emoji: "😄", label: "खुसी", percent: 50 },

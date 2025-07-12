@@ -81,6 +81,7 @@ export const getPostById = async (req, res) => {
     const { postId } = req.params;
     const post = await
       Post.findById(postId).populate("postType", "postType")
+      .populate('comments.user','fullName')
     if (!post) {
       return res.status(404).json({ msg: "Post not found" });
     } 
@@ -203,12 +204,12 @@ export const comments = async (req, res) => {
       { _id: postId },
       { $push: { comments: newComment } },
       { new: true, runValidators: true }
-    );
+    ).populate('comments.user','fullName');
+    const populatedComment = updatedPost.comments.at(-1);
 
     if (!updatedPost) {
       return res.status(400).json({ msg: "Cannot add comment to post" });
     }
-    const populatedComment= await Post.populate(newComment,{path:'comments.user',select:'fullName'})
     io.emit('newComment',{
       postId,
       comment:populatedComment

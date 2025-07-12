@@ -14,7 +14,7 @@ const httpServer = createServer(app)
 
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:5174",
+        origin:"http://localhost:5173",
         credentials: true,
     }
 })
@@ -23,7 +23,7 @@ app.set('io', io)
 app.use(express.json())
 app.use(cors(
     {
-        origin:"http://localhost:5174",
+        origin:"http://localhost:5173",
         credentials:true
     }
 ))
