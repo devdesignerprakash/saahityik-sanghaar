@@ -29,10 +29,8 @@ const Blog = () => {
         console.log(error)
       }
     }
-    fetchPost()
     // Join post room
     socket.emit('joinPostRoom', postData._id)
-
     // Listen for new comment
     socket.on('newComment', ({ postId, comment }) => {
       if (postId === postData._id) {
@@ -43,18 +41,22 @@ const Blog = () => {
         }))
       }
     })
+    const handlePostLiked = ({ postId, totalLikes }) => {
+    if (postId === postData._id) {
+      setLikesLength(totalLikes);
+    }
+  };
     //listen for newLikes
-   socket.on('postLiked', ({ postId, totalLikes }) => {
-  console.log("postLiked triggered:", postId, totalLikes);  // check this logs
-  if (postId === postData._id) {
-    setLikesLength(totalLikes);
-  }
-});
+   socket.on('postLiked',handlePostLiked);
+   fetchPost()
+  
   }
   return () => {
     socket.off('newComment')
-    socket.off('postLiked');
+    socket.off('postLiked',handlePostLiked);
+   
   }
+    
 }, [])
 
   const dateConverter = (dateString) => {
