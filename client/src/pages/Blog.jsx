@@ -19,45 +19,59 @@ const Blog = () => {
   const location = useLocation()
   const { postData } = location.state || {}
   const [postDetails, setPostDetails] = useState(null)
-  useEffect(() => {
-  if (postData) {
-    const fetchPost=async()=>{
-      try{
-        const response= await axios.get(`http://localhost:8000/api/post/getPost/${postData._id}`,{withCredentials:true})
-        setPostDetails(response?.data)
-      }catch(error){
-        console.log(error)
-      }
-    }
-    // Join post room
-    socket.emit('joinPostRoom', postData._id)
-    // Listen for new comment
-    socket.on('newComment', ({ postId, comment }) => {
-      if (postId === postData._id) {
-        setPostDetails(prev =>({
-          
-          ...prev,
-          comments: [...(prev?.comments || []), comment]
-        }))
-      }
-    })
-    const handlePostLiked = ({ postId, totalLikes }) => {
+
+  const handlePostLiked = ({ postId, totalLikes }) => {
     if (postId === postData._id) {
       setLikesLength(totalLikes);
     }
   };
-    //listen for newLikes
-   socket.on('postLiked',handlePostLiked);
-   fetchPost()
-  
-  }
-  return () => {
-    socket.off('newComment')
-    socket.off('postLiked',handlePostLiked);
+
+  useEffect(() => {
+    if (postData) {
+      const fetchPost=async()=>{
+        try{
+          const response= await axios.get(`http://localhost:8000/api/post/getPost/${postData._id}`,{withCredentials:true})
+          setPostDetails(response?.data)
+          setLikesLength(response?.data?.likes?.length || 0)
+        }catch(error){
+        }
+      }
+      // Join post room
+      socket.emit('joinPostRoom', postData._id)
+      // Listen for new comment
+      socket.on('newComment', ({ postId, comment }) => {
+        if (postId === postData._id) {
+          setPostDetails(prev =>({
+            ...prev,
+            comments: [...(prev?.comments || []), comment]
+          }))
+        }
+      })
+
+      //listen for post likes
    
-  }
-    
-}, [])
+      // Listen for comment likes
+      socket.on('commentLiked', ({ postId, commentId, likes }) => {
+        if (postId === postData._id) {
+          setPostDetails(prev => ({
+            ...prev,
+            comments: prev.comments.map(comment => 
+              comment._id === commentId 
+                ? { ...comment, likes }
+                : comment
+            )
+          }))
+        }
+      })
+      
+      fetchPost()
+    }
+    return () => {
+      socket.off('newComment')
+      socket.off('postLiked',handlePostLiked);
+      socket.off('commentLiked');
+    }
+  }, [postData])
 
   const dateConverter = (dateString) => {
     try {
@@ -102,26 +116,33 @@ const Blog = () => {
       console.log(error)
     }
   }
-  const handleLike=async()=>{
-  try{
-      const response=await axios.patch(`http://localhost:8000/api/post/like/${postData._id}`,{},{
-        headers:{
-          Authorization:`Bearer ${token.trim()}`
+  const handleCommentLike = async (commentId) => {
+    if (!token) {
+      toast.info("कृपया लगईन गर्नुहोस")
+      navigate("/login")
+      return
+    }
+    try {
+      const response = await axios.patch(`http://localhost:8000/api/post/comment/like/${postData._id}/${commentId}`, {}, {
+        headers: {
+          Authorization: `Bearer ${token.trim()}`
         }
-      },{withCredentials:true})
-      if(response.status==200){
-        setPostDetails(prev=>({
+      }, { withCredentials: true })
+      if (response.status == 200) {
+        setPostDetails(prev => ({
           ...prev,
-          likes:response.data.likes
+          comments: prev.comments.map(comment => 
+            comment._id === commentId 
+              ? { ...comment, likes: response.data.likes }
+              : comment
+          )
         }))
         toast.success('तपाईँले मन पराउनुभयो')
       }
-    }catch(error){
-      console.log(error)
+    } catch (error) {
     }
-
   }
-  console.log("postDetails before like" ,postDetails)
+
   //reactions
 // const reactions = [
 //   { id: "happy", emoji: "😄", label: "खुसी", percent: 50 },
@@ -243,9 +264,8 @@ const Blog = () => {
                     </small>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
-                    <GrLike className="text-lg" onClick={handleLike}/>
-                      {console.log("in like Section",postDetails.likes)}
-                    <span>{likeslength}</span>
+                    <GrLike className="text-lg cursor-pointer hover:text-blue-600" onClick={() => handleCommentLike(comment._id)}/>
+                    <span>{comment.likes?.length || 0}</span>
                   </div>
                 </div>
               ))

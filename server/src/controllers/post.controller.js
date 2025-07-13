@@ -151,11 +151,11 @@ export const deletePost = async (req, res) => {
   }
 };
 
-// Like / Unlike Post
+// Like / Unlike Post or Comment
 export const likes = async (req, res) => {
-  const io= req.app.get('io')
+  const io = req.app.get('io')
   try {
-    const { postId } = req.params;
+    const { postId, commentId } = req.params;
     const { id: userId } = req.user;
    
     const post = await Post.findById(postId);
@@ -163,6 +163,42 @@ export const likes = async (req, res) => {
       return res.status(404).json({ msg: "Post not found" });
     }
 
+    // Handle comment like
+    if (commentId) {
+      const comment = post.comments.id(commentId);
+      if (!comment) {
+        return res.status(404).json({ msg: "Comment not found" });
+      }
+
+      if (!comment.likes) {
+        comment.likes = [];
+      }
+
+      const alreadyLiked = comment.likes.includes(userId);
+
+      if (alreadyLiked) {
+        comment.likes = comment.likes.filter(
+          (uid) => uid.toString() !== userId.toString()
+        );
+      } else {
+        comment.likes.push(userId);
+      }
+
+      await post.save();
+      
+      io.emit('commentLiked', {
+        postId,
+        commentId,
+        likes: comment.likes
+      });
+      
+      return res.status(200).json({
+        msg: alreadyLiked ? "Comment unliked" : "Comment liked",
+        likes: comment.likes,
+      });
+    }
+
+    // Handle post like
     const alreadyLiked = post.likes.includes(userId);
 
     if (alreadyLiked) {
@@ -172,7 +208,6 @@ export const likes = async (req, res) => {
     } else {
       post.likes.push(userId)
     }
-  
 
     await post.save();
     await post.populate('likes','fullName')

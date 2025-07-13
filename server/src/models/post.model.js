@@ -13,7 +13,8 @@ const postSchema= new mongoose.Schema({
     comments:[{
         text:{type:String,default:""},
         user:{type:mongoose.Schema.Types.ObjectId, ref:"User"},
-        createdAt:{type:Date,default:null}
+        createdAt:{type:Date,default:null},
+        likes:[{type:mongoose.Schema.Types.ObjectId,ref:"User"}]
     }]
 },{
     timestamps:true
