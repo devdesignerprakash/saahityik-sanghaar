@@ -115,6 +115,7 @@ export const editPost = async (req, res) => {
         author,
         postType: existPostType._id,
       },
+   
       { new: true, runValidators: true }
     );
 
@@ -152,10 +153,11 @@ export const deletePost = async (req, res) => {
 
 // Like / Unlike Post
 export const likes = async (req, res) => {
+  const io= req.app.get('io')
   try {
     const { postId } = req.params;
     const { id: userId } = req.user;
-
+   
     const post = await Post.findById(postId);
     if (!post) {
       return res.status(404).json({ msg: "Post not found" });
@@ -168,11 +170,16 @@ export const likes = async (req, res) => {
         (uid) => uid.toString() !== userId.toString()
       );
     } else {
-      post.likes.push(userId);
+      post.likes.push(userId)
     }
+  
 
     await post.save();
-
+    await post.populate('likes','fullName')
+    io.emit('postLiked',{
+     postId,
+    totalLikes: post.likes.length,
+    })
     res.status(200).json({
       msg: alreadyLiked ? "Post unliked" : "Post liked",
       totalLikes: post.likes.length,

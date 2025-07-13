@@ -11,6 +11,7 @@ import axios from 'axios'
 import { socket } from "../utils/socket";
 const Blog = () => {
   const { token } = useContext(AuthContext)
+  const [likeslength,setLikesLength]=useState(0)
   const [comment, setComment] = useState({
     text: ""
   })
@@ -41,11 +42,18 @@ const Blog = () => {
           comments: [...(prev?.comments || []), comment]
         }))
       }
-      console.log(postDetails)
     })
+    //listen for newLikes
+   socket.on('postLiked', ({ postId, totalLikes }) => {
+  console.log("postLiked triggered:", postId, totalLikes);  // check this logs
+  if (postId === postData._id) {
+    setLikesLength(totalLikes);
+  }
+});
   }
   return () => {
     socket.off('newComment')
+    socket.off('postLiked');
   }
 }, [])
 
@@ -92,6 +100,26 @@ const Blog = () => {
       console.log(error)
     }
   }
+  const handleLike=async()=>{
+  try{
+      const response=await axios.patch(`http://localhost:8000/api/post/like/${postData._id}`,{},{
+        headers:{
+          Authorization:`Bearer ${token.trim()}`
+        }
+      },{withCredentials:true})
+      if(response.status==200){
+        setPostDetails(prev=>({
+          ...prev,
+          likes:response.data.likes
+        }))
+        toast.success('तपाईँले मन पराउनुभयो')
+      }
+    }catch(error){
+      console.log(error)
+    }
+
+  }
+  console.log("postDetails before like" ,postDetails)
   //reactions
 // const reactions = [
 //   { id: "happy", emoji: "😄", label: "खुसी", percent: 50 },
@@ -213,8 +241,9 @@ const Blog = () => {
                     </small>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
-                    <GrLike className="text-lg" />
-                    <span>{comment.likesCount ?? 0}</span>
+                    <GrLike className="text-lg" onClick={handleLike}/>
+                      {console.log("in like Section",postDetails.likes)}
+                    <span>{likeslength}</span>
                   </div>
                 </div>
               ))
@@ -223,6 +252,7 @@ const Blog = () => {
             )}
           </div>
         </div>
+        
 
         {/* Share Section */}
         <div>
