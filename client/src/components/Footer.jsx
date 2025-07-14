@@ -9,7 +9,7 @@ const Footer = () => {
 
         {/* Site Info */}
         <div>
-          <h2 className="text-xl font-bold text-white mb-3">साहित्यिक सँघार</h2>
+          <h2 className="text-xl font-bold text-white mb-3">साहित्यिक सङ्घार</h2>
           <p className="text-sm">
             नेपाली साहित्य, कविता, उपन्यास र विचारहरू समेटिएको एक साहित्यिक यात्रा।
           </p>
