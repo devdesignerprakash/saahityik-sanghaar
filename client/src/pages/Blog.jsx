@@ -6,12 +6,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import NepaliDate from 'nepali-date'
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
+import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { socket } from "../utils/socket";
 const Blog = () => {
   const { token } = useContext(AuthContext)
-  const [likeslength,setLikesLength]=useState(0)
+  const currentUserId = token ? jwtDecode(token).id : null
   const [comment, setComment] = useState({
     text: ""
   })
@@ -48,11 +49,12 @@ const Blog = () => {
         }
       })
 
-      //listen for post likes
+      
    
       // Listen for comment likes
       socket.on('commentLiked', ({ postId, commentId, likes }) => {
         if (postId === postData._id) {
+          console.log(likes,"comment like update")
           setPostDetails(prev => ({
             ...prev,
             comments: prev.comments.map(comment => 
@@ -60,6 +62,16 @@ const Blog = () => {
                 ? { ...comment, likes }
                 : comment
             )
+          }))
+        }
+      })
+      //listen for post likes
+       socket.on('postLiked', ({ postId,likes}) => {
+        console.log(likes,"socket likes update")
+        if (postId === postData._id) {
+          setPostDetails(prev => ({
+            ...prev,
+            likes:likes
           }))
         }
       })
@@ -116,6 +128,30 @@ const Blog = () => {
       console.log(error)
     }
   }
+   const handlePostLike = async () => {
+    if (!token) {
+      toast.info("कृपया लगईन गर्नुहोस")
+      navigate("/login")
+      return
+    }
+    try {
+      const response = await axios.patch(`http://localhost:8000/api/post/likes/${postData._id}`, {}, {
+        headers: {
+          Authorization: `Bearer ${token.trim()}`
+        }
+      }, { withCredentials: true })
+      console.log(response)
+      if (response.status == 200) {
+        setPostDetails(prev => ({
+          ...prev,
+          likes:response?.data?.likes
+        }))
+      }
+    } catch (error) {
+    }
+  }
+  
+  //handle comment like 
   const handleCommentLike = async (commentId) => {
     if (!token) {
       toast.info("कृपया लगईन गर्नुहोस")
@@ -128,6 +164,7 @@ const Blog = () => {
           Authorization: `Bearer ${token.trim()}`
         }
       }, { withCredentials: true })
+      
       if (response.status == 200) {
         setPostDetails(prev => ({
           ...prev,
@@ -137,7 +174,6 @@ const Blog = () => {
               : comment
           )
         }))
-        toast.success('तपाईँले मन पराउनुभयो')
       }
     } catch (error) {
     }
@@ -178,13 +214,27 @@ const Blog = () => {
             />
           </div>
 
-          {/* Poem Content */}
-          <p className="text-gray-800 leading-8 whitespace-pre-wrap text-justify">
-            {postDetails?.content}
-          </p>
+          {/* Poem Content with Like Button */}
+          <div className="relative">
+            <p className="text-gray-800 leading-8 whitespace-pre-wrap text-justify">
+              {postDetails?.content}
+            </p>
+            
+            {/* Post Like Button - Right Corner */}
+            <div className="absolute bottom-0 right-0 flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-3 py-2 shadow-sm">
+              <GrLike 
+                className={`text-lg cursor-pointer transition-colors ${
+                  postDetails?.likes?.includes(currentUserId) 
+                    ? 'text-blue-600' 
+                    : 'text-gray-600 hover:text-blue-600'
+                }`} 
+                onClick={handlePostLike}
+              />
+              <span className="text-sm text-gray-700">{postDetails?.likes?.length || 0}</span>
+            </div>
+          </div>
         </div>
       </div>
-
       {/* Comment and Share Section */}
       <div className="w-full max-w-4xl mx-auto px-4 py-6">
         {/* Comment Form */}
@@ -264,7 +314,15 @@ const Blog = () => {
                     </small>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
-                    <GrLike className="text-lg cursor-pointer hover:text-blue-600" onClick={() => handleCommentLike(comment._id)}/>
+                    <GrLike 
+                      className={`text-lg cursor-pointer transition-colors ${
+                        comment.likes?.includes(currentUserId) 
+                          ? 'text-blue-600' 
+                          : 'text-gray-600 hover:text-blue-600'
+                      }`} 
+
+                      onClick={() => handleCommentLike(comment._id)}
+                    />
                     <span>{comment.likes?.length || 0}</span>
                   </div>
                 </div>

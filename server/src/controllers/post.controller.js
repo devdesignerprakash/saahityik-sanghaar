@@ -153,6 +153,7 @@ export const deletePost = async (req, res) => {
 
 // Like / Unlike Post or Comment
 export const likes = async (req, res) => {
+  console.log(req.params)
   const io = req.app.get('io')
   try {
     const { postId, commentId } = req.params;
@@ -210,14 +211,15 @@ export const likes = async (req, res) => {
     }
 
     await post.save();
-    await post.populate('likes','fullName')
     io.emit('postLiked',{
      postId,
+     likes:post.likes,
     totalLikes: post.likes.length,
     })
     res.status(200).json({
       msg: alreadyLiked ? "Post unliked" : "Post liked",
       totalLikes: post.likes.length,
+      likes: post.likes,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

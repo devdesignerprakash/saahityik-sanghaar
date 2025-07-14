@@ -12,6 +12,7 @@ postRouter.get('/getPosts',verifyToken,getPosts)
 postRouter.patch('/published/:postId',verifyToken,published)
 // postRouter.patch('/like/:postId',verifyToken,likes)
 postRouter.patch('/comment/:postId',verifyToken,comments)
+postRouter.patch('/likes/:postId',verifyToken,likes)
 postRouter.patch('/comment/like/:postId/:commentId',verifyToken,likes)
 postRouter.delete('/delete-post/:id',verifyToken,deletePost)
 
