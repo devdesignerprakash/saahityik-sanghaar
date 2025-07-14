@@ -31,7 +31,7 @@ export const AuthContextProvider = ({ children }) => {
             try {
                 const response = await axios.get('http://localhost:8000/api/user/getUser', {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${token.trim()}`,
                     },
                 });
                 setUser(response?.data);

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import {Link} from 'react-router-dom'
 import AuthContext from '../context/AuthContext';
 import axios from 'axios'
+import { socket } from '../utils/socket';
 
 
 const BlogList = () => {
@@ -24,6 +25,13 @@ useEffect(()=>{
 
     }
   }
+ socket.on('publishedPost', (data) => {
+  setLiteratureMenu((prev) => {
+    const exists = prev.some(item => item.id === data.id);
+    if (exists) return prev;
+    return [...prev, data];
+  });
+});
   fetchPublishedPost()
 },[token])
 

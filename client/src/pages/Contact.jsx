@@ -39,7 +39,7 @@ const Contact = () => {
     loading="lazy"
     allowFullScreen
     referrerPolicy="no-referrer-when-downgrade"
-    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d28267.454441003596!2d85.37545!3d27.673046!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb1a13269174b9%3A0x8b9583c158c7f911!2sGatthaghar%2C%20Madhyapur%20Thimi%2044600%2C%20Nepal!5e0!3m2!1sen!2sus!4v1752460663372!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d28267.454441003596!2d85.37545!3d27.673046!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb1a13269174b9%3A0x8b9583c158c7f911!2sGatthaghar%2C%20Madhyapur%20Thimi%2044600%2C%20Nepal!5e0!3m2!1sen!2sus!4v1752460663372!5m2!1sen!2sus" 
   ></iframe>
 </div>
 </div>

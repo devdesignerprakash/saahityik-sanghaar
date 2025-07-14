@@ -57,6 +57,7 @@ export const getPublishedPosts = async (req, res) => {
 
 // Publish Post
 export const published = async (req, res) => {
+const io =req.app.get('io')
   try {
     if (req.user.userType !== "admin") {
       return res.status(403).json({ msg: "Only admin can publish post" });
@@ -70,6 +71,7 @@ export const published = async (req, res) => {
      existPost.status=status
     existPost.publishedAt = new Date();
     await existPost.save();
+    io.emit('publishedPost',existPost)
     res.status(200).json({ msg: " तपाईँको साहित्य प्रकाशित भयो" ,existPost});
   } catch (error) {
     res.status(500).json({ error: error.message });
