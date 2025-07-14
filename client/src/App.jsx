@@ -10,6 +10,7 @@ import ViewPostContent from './components/adminComponents/ViewPostContent';
 import ShowAllContents from './components/adminComponents/ShowAllContents';
 import BlogTypes from './pages/adminPages/BlogTypes';
 import About from './pages/About';
+import Contact from './pages/Contact';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/about-us" element={<About/>}/>
+        <Route path='/contact' element={<Contact/>}/>
         {/* Admin routes (protected inside AdminLayout) */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
