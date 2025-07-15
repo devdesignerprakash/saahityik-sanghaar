@@ -1,6 +1,32 @@
 import React from "react";
+import axios from "axios";
+import { convertToNepaliUnicode } from "../utils/preetiToUnicode";
+import {toast} from "react-toastify";
 
-const Header = () => {
+const Header = ({setSearchPosts}) => {
+  const handleUnicodeConversion = (text) => {
+    return convertToNepaliUnicode(text);
+  }
+  const handleSearch=(e) => {
+    e.preventDefault();
+    try{
+      const searchQuery = e.target[0].value.trim();
+      if (searchQuery) {
+       axios.get(`http://localhost:8000/api/post/search?query=${searchQuery}`)
+          .then(response => {
+           setSearchPosts (response.data);
+          })
+          .catch(error => {
+            toast.error("माफ गर्नुहोस्, तपाईँको खोजी भेटिएन।");
+          });
+      } else {
+        console.warn("Search query is empty");
+      }
+      e.target.reset();
+    }catch(error){
+      console.error("Error during search:", error);
+    }
+  }
   return (
     <>
       <div className="px-4 sm:px-8 xl:px-24 py-12 relative max-w-4xl mx-auto text-center">
@@ -19,11 +45,12 @@ const Header = () => {
         </p>
 
         {/* Search Form */}
-        <form className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+        <form className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4" onSubmit={handleSearch}>
           <input
             type="text"
             placeholder="यहाँ खोज्नुहोस्..."
             className="w-full sm:w-80 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-900 transition duration-150"
+            onChange={(e) => e.target.value = handleUnicodeConversion(e.target.value)}
           />
           <button
             type="submit"
@@ -37,6 +64,7 @@ const Header = () => {
               strokeWidth={1.5}
               stroke="currentColor"
               className="w-5 h-5"
+              
             >
               <path
                 strokeLinecap="round"

@@ -1,6 +1,6 @@
 import express from 'express'
 import { verifyToken } from '../middlewares/verifyToken.middleware.js'
-import { comments, createPost, deletePost, editPost, getPostById, getPosts, getPublishedPosts, likes, published } from '../controllers/post.controller.js'
+import { comments, createPost, deletePost, editPost, getPostById, getPosts, getPublishedPosts, likes, published, searchPosts } from '../controllers/post.controller.js'
 import optionalImageUpload from '../middlewares/image.middleware.js'
 
 const postRouter= express.Router()
@@ -9,6 +9,7 @@ postRouter.put('/update-post/:postId',verifyToken,optionalImageUpload,editPost)
 postRouter.get('/getPublishedPost',getPublishedPosts)
 postRouter.get('/getPost/:postId',getPostById)
 postRouter.get('/getPosts',verifyToken,getPosts)
+postRouter.get('/search',searchPosts)
 postRouter.patch('/published/:postId',verifyToken,published)
 // postRouter.patch('/like/:postId',verifyToken,likes)
 postRouter.patch('/comment/:postId',verifyToken,comments)

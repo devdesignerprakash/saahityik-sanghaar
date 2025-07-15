@@ -267,3 +267,27 @@ export const comments = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+export const searchPosts = async (req, res) => {
+  try {
+    const { query } = req.query;
+    if (!query || query.trim() === "") {
+      return res.status(400).json({ msg: "Search query cannot be empty" });
+    }
+
+    const regex = new RegExp(query, "i"); // Case-insensitive search
+    const posts = await Post.find({
+      $or: [
+        { title: regex },
+        { content: regex },
+        { author: regex },
+      ],
+    }).populate('postType', 'postType labelName');
+    if (posts.length === 0) {
+      return res.status(404).json({ msg: "No posts found matching the search query" });
+    }
+    res.status(200).json(posts);
+  } catch (error) { 
+    res.status(500).json({ error: error.message });
+  }
+}
+
