@@ -5,7 +5,7 @@ import Nepalify from "nepalify";
 import {toast} from "react-toastify";
 import { useLayoutEffect } from "react";
 
-const CreatePost = ({ onClose, post }) => {
+const CreatePost = ({ onClose, post, onPostCreated }) => {
   const { token } = useContext(AuthContext);
   const [postTypes, setPostTypes] = useState([]);
   const [frontendImage, setFrontendImage] = useState(null);
@@ -101,7 +101,11 @@ formData.append("postType", postContent.postType);
     );
     if (response.status === 201) {
       toast.success(response.data.msg || "तपाईँको साहित्य सिर्जना भयो । कृपया प्रकाशित हुनको लागि प्रतिक्षा गर्नुहोस");
-      onClose(!post);
+      if (onPostCreated) {
+        onPostCreated();
+      } else {
+        onClose(!post);
+      }
     }
       
    }catch(error){

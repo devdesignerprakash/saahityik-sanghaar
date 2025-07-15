@@ -7,17 +7,9 @@ import { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
 import { useState } from 'react'
 import CreatePost from '../components/adminComponents/CreatePost'
-import { useEffect } from 'react'
-import { socket } from '../utils/socket'
 const Home = () => {
   const {user}=useContext(AuthContext)
   const [createPost,setCreatePost]=useState(false)
-  useEffect(()=>{
-    socket.on('connect',()=>{
-      console.log('Connected:', socket.id)
-    })
-
-  },[])
   return (
     <>
     <Header/>

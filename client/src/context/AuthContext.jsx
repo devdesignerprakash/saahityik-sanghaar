@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { createContext, useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
@@ -7,6 +8,8 @@ export const AuthContextProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true); // ✅ New state
+    const [justLoggedIn, setJustLoggedIn] = useState(false);
+    const navigate = useNavigate();
 
     // Load token on mount
     useEffect(() => {
@@ -35,6 +38,16 @@ export const AuthContextProvider = ({ children }) => {
                     },
                 });
                 setUser(response?.data);
+                
+                // Redirect after successful login
+                if (justLoggedIn && response?.data) {
+                    if (response.data.userType === 'admin') {
+                        navigate('/admin');
+                    } else {
+                        navigate('/');
+                    }
+                    setJustLoggedIn(false);
+                }
             } catch (error) {
                 console.error('Failed to fetch user:', error);
                 setUser(null);
@@ -54,8 +67,8 @@ export const AuthContextProvider = ({ children }) => {
             sessionStorage.setItem('authToken', newToken);
         }
         setToken(newToken);
-        setIsLoading(true); // Force fetchUser again
-    }, []);
+        setJustLoggedIn(true);
+    }, [navigate]);
 
     // Logout
     const logout = useCallback(() => {

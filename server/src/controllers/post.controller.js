@@ -45,11 +45,13 @@ export const getPosts = async (req, res) => {
 
 // Get Published Posts
 export const getPublishedPosts = async (req, res) => {
+  const io =req.app.get('io')
   try {
     const publishedPosts = await Post.find({ status: "published" })
     .populate('postType','postType labelName')
     .populate('comments.user','fullName');
     res.status(200).json(publishedPosts);
+     io.emit('published',publishedPosts)
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -57,7 +59,7 @@ export const getPublishedPosts = async (req, res) => {
 
 // Publish Post
 export const published = async (req, res) => {
-const io =req.app.get('io')
+
   try {
     if (req.user.userType !== "admin") {
       return res.status(403).json({ msg: "Only admin can publish post" });
@@ -71,7 +73,7 @@ const io =req.app.get('io')
      existPost.status=status
     existPost.publishedAt = new Date();
     await existPost.save();
-    io.emit('publishedPost',existPost)
+   
     res.status(200).json({ msg: " तपाईँको साहित्य प्रकाशित भयो" ,existPost});
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -43,7 +43,7 @@ const Footer = () => {
       </div>
       {/* Bottom Line */}
       <div className="mt-10 border-t border-gray-700 pt-6 text-center text-sm">
-        © {new Date().getFullYear()} साहित्यिक सँघारमा सबै अधिकार सुरक्षित छ।
+        © {new Date().getFullYear()} साहित्यिक सङ्घारमा सबै अधिकार सुरक्षित छ।
       </div>
     </footer>
   );

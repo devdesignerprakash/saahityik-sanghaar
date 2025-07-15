@@ -1,15 +1,24 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import AdminNav from "./AdminNav"; // Sidebar only
 import { useContext } from "react";
 import AuthContext from "../../context/AuthContext";
 
 const AdminLayout = () => {
-  const {user, isLoading}= useContext(AuthContext)
-  if (isLoading) {
+  const {user, isLoading, token}= useContext(AuthContext)
+  
+  // Wait for authentication to complete
+  if (isLoading || (token && !user)) {
     return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
-  if (!user || user.userType !== 'admin') {
-    return <div className="flex items-center justify-center h-screen">Access Denied</div>;
+  
+  // If no token or user, redirect to login
+  if (!token || !user) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  // If user is not admin, redirect to home
+  if (user.userType !== 'admin') {
+    return <Navigate to="/" replace />;
   }
   return (
     <>

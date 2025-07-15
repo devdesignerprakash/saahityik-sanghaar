@@ -13,7 +13,6 @@ const Login = () => {
   });
 
   const [rememberMe, setRememberMe] = useState(false);
-  const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
   const handleUserOrEmailChange = (e) => {
@@ -44,12 +43,12 @@ const Login = () => {
       );
 
       if (response.status === 200) {
-     
         const { token } = response?.data;
         login(token, rememberMe);
         setCredentials({ userName: "", email: "", password: "" });
         toast.success(response.data.msg || "Login successful");
-        navigate("/");
+        
+        // Don't redirect here - let AuthContext handle it after user is fetched
       }
     } catch (error) {
       toast.error(error?.response?.data?.msg || "Login failed. Please check your credentials.");
@@ -65,7 +64,7 @@ const Login = () => {
           <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-white border-4 border-blue-100 shadow-lg flex flex-col items-center justify-center text-center px-2">
             <div className="text-lg md:text-xl font-bold leading-tight">
               <div className="text-red-600">साहित्यिक</div>
-              <div className="text-blue-600">संघार</div>
+              <div className="text-blue-600">सङ्घार</div>
             </div>
           </div>
         </div>

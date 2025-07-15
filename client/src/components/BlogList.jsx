@@ -7,37 +7,46 @@ import { socket } from '../utils/socket';
 
 const BlogList = () => {
   const{token}=useContext(AuthContext)
-useEffect(()=>{
-  const fetchPublishedPost=async()=>{
-    try{
-      const response= await axios.get(`http://localhost:8000/api/post/getPublishedPost`,{
-        withCredentials:true
-      })
-      // console.log(response)
-      if(response?.data.length>0){
-        console.log(response.data)
-        setLiteratureMenu(response.data)
-      }
-      else{
-        setLiteratureMenu([])
-      }
-    }catch(error){
-
-    }
-  }
- socket.on('publishedPost', (data) => {
-  setLiteratureMenu((prev) => {
-    const exists = prev.some(item => item.id === data.id);
-    if (exists) return prev;
-    return [...prev, data];
-  });
-});
-  fetchPublishedPost()
-},[token])
-
-
   const [selectedCategory, setSelectedCategory] = useState("सबै");
   const [literatureMenu,setLiteratureMenu] = useState([]);
+
+  useEffect(()=>{
+    const fetchPublishedPost=async()=>{
+      try{
+        const response= await axios.get(`http://localhost:8000/api/post/getPublishedPost`,{
+          withCredentials:true
+        })
+        // console.log(response)
+        if(response?.data.length>0){
+          console.log(response.data)
+          setLiteratureMenu(response.data)
+        }
+        else{
+          setLiteratureMenu([])
+        }
+      }catch(error){
+
+      }
+    }
+    fetchPublishedPost()
+  },[token])
+
+  useEffect(() => {
+    const handlePublished = (data) => {
+      console.log(data,'afterpublished is clicked')
+      setLiteratureMenu((prev) => {
+        const exists = prev.some(item => item.id === data.id);
+        if (exists) return prev;
+        return [...prev, data];
+      });
+    };
+
+    socket.on('published', handlePublished);
+
+    return () => {
+      socket.off('published', handlePublished);
+    };
+  }, []);
   const categories = ["सबै", ...new Set(literatureMenu.map(item => item?.postType?.labelName))];
   console.log(literatureMenu)
 

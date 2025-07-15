@@ -21,31 +21,36 @@ const ShowAllPosts = () => {
   const [error, setError] = useState(null);
   const [isCreateOpen, setCreateOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const { data } = await axios.get(
-          "http://localhost:8000/api/post/getPosts",
-          {
-            headers: { Authorization: `Bearer ${token?.trim()}` },
-          }
-        );
-        setPosts(data || []);
-      } catch (error) {
-        if (error.response?.status === 404) {
-          setPosts([]); // Treat as empty data
-          return;
+  const fetchPosts = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await axios.get(
+        "http://localhost:8000/api/post/getPosts",
+        {
+          headers: { Authorization: `Bearer ${token?.trim()}` },
         }
-        setError("पोस्टहरू लोड गर्न असफल भयो");
-      } finally {
-        setLoading(false);
+      );
+      setPosts(data || []);
+    } catch (error) {
+      if (error.response?.status === 404) {
+        setPosts([]); // Treat as empty data
+        return;
       }
-    };
+      setError("पोस्टहरू लोड गर्न असफल भयो");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (token) fetchPosts();
   }, [token]);
+
+  const handlePostCreated = () => {
+    fetchPosts();
+    setCreateOpen(false);
+  };
 
   const handleEdit = (post) => {
     setPostToEdit(post);
@@ -158,7 +163,7 @@ const ShowAllPosts = () => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6">
+    <div className="bg-white rounded-xl shadow-md p-6 md:ml-64">
       <div className="flex justify-end mb-4">
         <button
           className="bg-blue-500 justify-end text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -256,7 +261,7 @@ const ShowAllPosts = () => {
         </div>
       )}
 
-      {isCreateOpen && <CreatePost onClose={() => setCreateOpen(false)} />}
+      {isCreateOpen && <CreatePost onClose={() => setCreateOpen(false)} onPostCreated={handlePostCreated} />}
       {openEdit && (
         <EditPost post={postToEdit} onClose={setOpenEdit} openEdit={openEdit} />
       )}
