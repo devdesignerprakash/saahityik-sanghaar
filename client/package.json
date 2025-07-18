@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.8",
     "axios": "^1.10.0",
+    "dotenv": "^17.2.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.511.0",
     "nepali-date": "^0.1.3",
