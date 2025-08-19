@@ -3,18 +3,22 @@ import { verifyToken } from '../middlewares/verifyToken.middleware.js'
 import { comments, createPost, deletePost, editPost, getPostById, getPosts, getPublishedPosts, likes, published, searchPosts } from '../controllers/post.controller.js'
 import optionalImageUpload from '../middlewares/image.middleware.js'
 
-const postRouter= express.Router()
-postRouter.post('/create-post',verifyToken,optionalImageUpload,createPost)
-postRouter.put('/update-post/:postId',verifyToken,optionalImageUpload,editPost)
-postRouter.get('/getPublishedPost',getPublishedPosts)
-postRouter.get('/getPost/:postId',getPostById)
-postRouter.get('/getPosts',verifyToken,getPosts)
-postRouter.get('/search',searchPosts)
-postRouter.patch('/published/:postId',verifyToken,published)
-// postRouter.patch('/like/:postId',verifyToken,likes)
-postRouter.patch('/comment/:postId',verifyToken,comments)
-postRouter.patch('/likes/:postId',verifyToken,likes)
-postRouter.patch('/comment/like/:postId/:commentId',verifyToken,likes)
-postRouter.delete('/delete-post/:id',verifyToken,deletePost)
+console.log('Setting up post routes...')
 
-export default postRouter;
+const postRouter = express.Router()
+
+postRouter.post('/create-post', verifyToken, optionalImageUpload, createPost)
+postRouter.put('/update-post/:postId', verifyToken, optionalImageUpload, editPost)
+postRouter.get('/getPublishedPost', getPublishedPosts)
+postRouter.get('/getPost/:postId', getPostById)
+postRouter.get('/getPosts', verifyToken, getPosts)
+postRouter.get('/search', searchPosts)
+postRouter.patch('/published/:postId', verifyToken, published)
+postRouter.patch('/comment/:postId', verifyToken, comments)
+postRouter.patch('/likes/:postId', verifyToken, likes)
+postRouter.patch('/comment/like/:postId/:commentId', verifyToken, likes)
+postRouter.delete('/delete-post/:id', verifyToken, deletePost)
+
+console.log('Post routes set up successfully')
+
+export default postRouter
