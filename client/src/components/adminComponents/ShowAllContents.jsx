@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
+import http from "../../utils/http";
 import { useNavigate } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -25,12 +25,7 @@ const ShowAllPosts = () => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await axios.get(
-        "http://localhost:8000/api/post/getPosts",
-        {
-          headers: { Authorization: `Bearer ${token?.trim()}` },
-        }
-      );
+      const { data } = await http.get("/api/post/getPosts");
       setPosts(data || []);
     } catch (error) {
       if (error.response?.status === 404) {
@@ -60,10 +55,7 @@ const ShowAllPosts = () => {
 
   const handleView = async (postId) => {
     try {
-      const { data } = await axios.get(
-        `http://localhost:8000/api/post/getPost/${postId}`,
-        { headers: { Authorization: `Bearer ${token?.trim()}` } }
-      );
+      const { data } = await http.get(`/api/post/getPost/${postId}`);
       if (data) {
         navigate(`/admin/post/view/${postId}`, { state: { post: data } });
       }
@@ -81,10 +73,7 @@ const ShowAllPosts = () => {
           label: "हो",
           onClick: async () => {
             try {
-              const response = await axios.delete(
-                `http://localhost:8000/api/post/delete-post/${postId}`,
-                { headers: { Authorization: `Bearer ${token?.trim()}` } }
-              );
+              const response = await http.delete(`/api/post/delete-post/${postId}`);
               if (response.status === 200) {
                 toast.success(response.data.msg);
               }

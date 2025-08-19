@@ -8,8 +8,9 @@ import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import http from '../utils/http';
 import { socket } from "../utils/socket";
+
 const Blog = () => {
   const { token } = useContext(AuthContext)
   const currentUserId = token ? jwtDecode(token).id : null
@@ -20,6 +21,7 @@ const Blog = () => {
   const location = useLocation()
   const { postData } = location.state || {}
   const [postDetails, setPostDetails] = useState(null)
+  const [likesLength, setLikesLength] = useState(0)
 
   const handlePostLiked = ({ postId, totalLikes }) => {
     if (postId === postData._id) {
@@ -31,7 +33,7 @@ const Blog = () => {
     if (postData) {
       const fetchPost=async()=>{
         try{
-          const response= await axios.get(`http://localhost:8000/api/post/getPost/${postData._id}`,{withCredentials:true})
+          const response= await http.get(`/api/post/getPost/${postData._id}`)
           setPostDetails(response?.data)
           setLikesLength(response?.data?.likes?.length || 0)
         }catch(error){
@@ -111,13 +113,7 @@ const Blog = () => {
   const handleComment = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.patch(`http://localhost:8000/api/post/comment/${postData._id}`, { comment }, {
-        headers: {
-          Authorization: `Bearer ${token.trim()}`
-        },
-      },
-        { withCreditals: true }
-      )
+      const response = await http.patch(`/api/post/comment/${postData._id}`, { comment })
       if (response.status == 200) {
         toast.success('तपाईँले सफलतापुर्वक प्रतिकृया जनाउनुभयो')
         setComment({
@@ -135,11 +131,7 @@ const Blog = () => {
       return
     }
     try {
-      const response = await axios.patch(`http://localhost:8000/api/post/likes/${postData._id}`, {}, {
-        headers: {
-          Authorization: `Bearer ${token.trim()}`
-        }
-      }, { withCredentials: true })
+      const response = await http.patch(`/api/post/likes/${postData._id}`, {})
       console.log(response)
       if (response.status == 200) {
         setPostDetails(prev => ({
@@ -159,11 +151,7 @@ const Blog = () => {
       return
     }
     try {
-      const response = await axios.patch(`http://localhost:8000/api/post/comment/like/${postData._id}/${commentId}`, {}, {
-        headers: {
-          Authorization: `Bearer ${token.trim()}`
-        }
-      }, { withCredentials: true })
+      const response = await http.patch(`/api/post/comment/like/${postData._id}/${commentId}`, {})
       
       if (response.status == 200) {
         setPostDetails(prev => ({

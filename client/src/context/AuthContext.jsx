@@ -1,13 +1,14 @@
-import axios from 'axios';
+import http from '../utils/http';
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true); // ✅ New state
+    const [isLoading, setIsLoading] = useState(true);
     const [justLoggedIn, setJustLoggedIn] = useState(false);
     const navigate = useNavigate();
 
@@ -17,10 +18,9 @@ export const AuthContextProvider = ({ children }) => {
         if (storedToken) {
             setToken(storedToken);
         } else {
-            setIsLoading(false); // ✅ No token = done loading
+            setIsLoading(false);
         }
     }, []);
-
 
     // Fetch user when token is set
     useEffect(() => {
@@ -32,16 +32,12 @@ export const AuthContextProvider = ({ children }) => {
             }
 
             try {
-                const response = await axios.get('http://localhost:8000/api/user/getUser', {
-                    headers: {
-                        Authorization: `Bearer ${token.trim()}`,
-                    },
-                });
-                setUser(response?.data);
+                const response = await http.get('/api/user/getUser');
+                setUser(response?.data?.data || null);
                 
                 // Redirect after successful login
                 if (justLoggedIn && response?.data) {
-                    if (response.data.userType === 'admin') {
+                    if (response.data.data.userType === 'admin') {
                         navigate('/admin');
                     } else {
                         navigate('/');
@@ -50,15 +46,16 @@ export const AuthContextProvider = ({ children }) => {
                 }
             } catch (error) {
                 console.error('Failed to fetch user:', error);
-                setUser(null);
+                toast.error('Session expired. Please log in again.');
+                logout();
             } finally {
                 setIsLoading(false);
             }
         };
 
         fetchUser();
-    }, [token]);
- 
+    }, [token, justLoggedIn, navigate]);
+
     // Login
     const login = useCallback((newToken, rememberMe = false) => {
         if (rememberMe) {
@@ -68,7 +65,7 @@ export const AuthContextProvider = ({ children }) => {
         }
         setToken(newToken);
         setJustLoggedIn(true);
-    }, [navigate]);
+    }, []);
 
     // Logout
     const logout = useCallback(() => {
@@ -77,7 +74,9 @@ export const AuthContextProvider = ({ children }) => {
         setToken(null);
         setUser(null);
         setIsLoading(false);
-    }, []);
+        navigate('/login');
+        toast.info('You have been logged out');
+    }, [navigate]);
 
     return (
         <AuthContext.Provider value={{ token, login, logout, user, isLoading }}>

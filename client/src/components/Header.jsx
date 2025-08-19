@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import http from "../utils/http";
 import { convertToNepaliUnicode } from "../utils/preetiToUnicode";
 import {toast} from "react-toastify";
 
@@ -7,12 +7,13 @@ const Header = ({setSearchPosts}) => {
   const handleUnicodeConversion = (text) => {
     return convertToNepaliUnicode(text);
   }
+  
   const handleSearch=(e) => {
     e.preventDefault();
     try{
       const searchQuery = e.target[0].value.trim();
       if (searchQuery) {
-       axios.get(`http://localhost:8000/api/post/search?query=${searchQuery}`)
+       http.get(`/api/post/search?query=${searchQuery}`)
           .then(response => {
            setSearchPosts (response.data);
           })
@@ -27,6 +28,7 @@ const Header = ({setSearchPosts}) => {
       console.error("Error during search:", error);
     }
   }
+  
   return (
     <>
       <div className="px-4 sm:px-8 xl:px-24 py-12 relative max-w-4xl mx-auto text-center">
@@ -41,7 +43,7 @@ const Header = ({setSearchPosts}) => {
         <p className="mt-4 text-sm sm:text-base text-gray-500 leading-relaxed">
           यहाँ हरेक अक्षरले अर्थ बोकेको छ, हरेक कथा आत्मा छुन्छ। कविता, कथा,
           निबन्ध, संस्मरण वा समीक्षा — साहित्यको गहिराइमा पर्न खोज्ने प्रत्येक
-          आत्माका लागि एक विश्रामस्थल यहाँहरुकै साहित्य घर “साहित्यिक सङ्घार ।
+          आत्माका लागि एक विश्रामस्थल यहाँहरुकै साहित्य घर "साहित्यिक सङ्घार ।
         </p>
 
         {/* Search Form */}

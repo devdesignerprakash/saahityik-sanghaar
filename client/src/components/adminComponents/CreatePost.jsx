@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext,useRef } from "react";
-import axios from "axios";
+import http from "../../utils/http";
 import AuthContext from "../../context/AuthContext";
 import Nepalify from "nepalify";
 import {toast} from "react-toastify";
@@ -24,9 +24,7 @@ const CreatePost = ({ onClose, post, onPostCreated }) => {
   useEffect(() => {
     const fetchPostTypes = async () => {
       try {
-        const { data } = await axios.get("http://localhost:8000/api/postType/getAllPostTypes", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const { data } = await http.get("/api/postType/getAllPostTypes");
         setPostTypes(data);
       } catch (error) {
         console.error("Error fetching post types:", error.response?.data || error.message);
@@ -78,38 +76,40 @@ const CreatePost = ({ onClose, post, onPostCreated }) => {
       }));
     }
   };
-const formData = new FormData();
-formData.append("title", postContent.title);
-formData.append("author", postContent.author);      
-formData.append("content", postContent.content);
-formData.append("imageUrl", postContent.imageUrl);  
-formData.append("postType", postContent.postType);
 
   // Placeholder submit handler
   const handleSubmit = async(e) => {
     e.preventDefault();
-   try{
-    const response = await axios.post(
-      "http://localhost:8000/api/post/create-post",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      },{withCredentials: true}     
-    );
-    if (response.status === 201) {
-      toast.success(response.data.msg || "तपाईँको साहित्य सिर्जना भयो । कृपया प्रकाशित हुनको लागि प्रतिक्षा गर्नुहोस");
-      if (onPostCreated) {
-        onPostCreated();
-      } else {
-        onClose(!post);
+    
+    // Create formData inside the handler to ensure it has the latest data
+    const formData = new FormData();
+    formData.append("title", postContent.title);
+    formData.append("author", postContent.author);      
+    formData.append("content", postContent.content);
+    formData.append("imageUrl", postContent.imageUrl);  
+    formData.append("postType", postContent.postType);
+    
+    try{
+      const response = await http.post(
+        "/api/post/create-post",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (response.status === 201) {
+        toast.success(response.data.msg || "तपाईँको साहित्य सिर्जना भयो । कृपया प्रकाशित हुनको लागि प्रतिक्षा गर्नुहोस");
+        if (onPostCreated) {
+          onPostCreated();
+        } else {
+          onClose(!post);
+        }
       }
+    }catch(error){
+      toast.error("Error submitting post:", error.response?.data || error.message);
     }
-      
-   }catch(error){
-      toast.error("Error submitting post:", error.response?.data || error.message);}
   };
 
   return (

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import axios from 'axios';
+import http from '../utils/http';
 import { socket } from '../utils/socket';
 
 const BlogList = ({ searchResults }) => {
@@ -13,9 +13,7 @@ const BlogList = ({ searchResults }) => {
   useEffect(() => {
     const fetchPublishedPost = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/post/getPublishedPost`, {
-          withCredentials: true,
-        });
+        const response = await http.get('/api/post/getPublishedPost');
 
         if (response?.data?.length > 0) {
           setLiteratureMenu(response.data);

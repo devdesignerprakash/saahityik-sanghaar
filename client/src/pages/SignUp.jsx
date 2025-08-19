@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import axios from 'axios'
+import http from '../utils/http';
 import {toast} from 'react-toastify';
 import nepalify from "nepalify";
-import {useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom';
 
 const SignUp = () => {
-  const navigate= useNavigate()
+  const navigate= useNavigate();
   const [userDetails, setUserDetails] = useState({
     fullName: "",
     email: "",
@@ -13,16 +13,15 @@ const SignUp = () => {
     gender: "",
     userName: "",
     password: ""
-
-  })
+  });
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setUserDetails(prev => ({
       ...prev,
       [name]: value
     }));
-  }
+  };
 
   //handle fullName and address in Nepali
   const handleNepaliInputChange = (e) => {
@@ -31,39 +30,35 @@ const SignUp = () => {
       ...prev,          
       [name]: nepalify.format(value) // Convert to Nepali script
     }));
-  }
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const response = await axios.post('http://localhost:8000/api/user/signup', userDetails, { withCredentials: true })
-      if (response.status == 201) {
-        setUserDetails(
-          {
-            fullName: "",
-            email: "",
-            address: "",
-            gender: "",
-            userName: "",
-            password: ""
+  };
 
-          }
-        )
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await http.post('/api/user/signup', userDetails);
+      if (response.status == 201) {
+        setUserDetails({
+          fullName: "",
+          email: "",
+          address: "",
+          gender: "",
+          userName: "",
+          password: ""
+        });
       }
       if(response.status === 201){
         toast.success(response?.data?.msg || "User registered successfully");
-        navigate("/")
+        navigate("/");
       }
-
     } catch (error) {
      if (error.response && error.response.status === 400) {
-        toast.error(error.response.data.msg || "User registration failed. Please check your details.")
+        toast.error(error.response.data.msg || "User registration failed. Please check your details.");
       }
       else{
         toast.error("An unexpected error occurred. Please try again later.");
       }
-
-  } 
-}
+    } 
+  };
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-gray-100 shadow-xl rounded-xl">

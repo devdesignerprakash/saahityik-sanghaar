@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import http from "../../utils/http";
 import AuthContext from "../../context/AuthContext";
 import {toast} from 'react-toastify'
+
 const ViewPostContent = () => {
   const location = useLocation();
   const { token } = useContext(AuthContext);
@@ -11,22 +12,19 @@ const ViewPostContent = () => {
 
   const post = location.state?.post || null;
   if (!post) return null;
+  
   const formattedDate = new Date(post.publishedAt).toLocaleDateString("ne-NP", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+  
   const handlePublished = async () => {
     try {
-      const response = await axios.patch(
-        `http://localhost:8000/api/post/published/${post._id}`,
+      const response = await http.patch(
+        `/api/post/published/${post._id}`,
         {
           status: "published",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token?.trim()}`,
-          },
         }
       );
       if (response.status === 200) {
@@ -37,6 +35,7 @@ const ViewPostContent = () => {
       console.log("Error updating post status:", error);
     }
   };
+  
   return (
     <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-6 my-8">
       {/* Title */}

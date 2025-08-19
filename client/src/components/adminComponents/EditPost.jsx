@@ -1,5 +1,5 @@
 import  { useEffect, useState, useContext, useRef } from "react";
-import axios from "axios";
+import http from "../../utils/http";
 import AuthContext from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import { convertToNepaliUnicode } from "../../utils/preetiToUnicode";
@@ -22,8 +22,8 @@ const EditPost = ({ onClose, post, openEdit }) => {
   });
   //inputref  to fix cursor position
   const inputRef= useRef(null)
- 
   
+   
   // Fill form with existing post values on mount
   useEffect(() => {
     if (post) {
@@ -43,18 +43,13 @@ useLayoutEffect(() => {
     inputRef.current.selectionEnd = cursorPosition;
   }
 }, [cursorPosition]);
-  
+   
 
   // Fetch post types
   useEffect(() => {
     const fetchPostTypes = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:8000/api/postType/getAllPostTypes",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const { data } = await http.get("/api/postType/getAllPostTypes");
         setPostTypes(data);
       } catch (error) {
         console.error(
@@ -111,15 +106,13 @@ useLayoutEffect(() => {
     }
 
     try {
-      const response = await axios.put(
-        `http://localhost:8000/api/post/update-post/${post._id}`,
+      const response = await http.put(
+        `/api/post/update-post/${post._id}`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
           },
-          withCredentials: true,
         }
       );
 
@@ -259,4 +252,3 @@ useLayoutEffect(() => {
 };
 
 export default EditPost;
-

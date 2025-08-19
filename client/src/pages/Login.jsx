@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa";
 import AuthContext from "../context/AuthContext";
-import axios from "axios";
+import http from "../utils/http";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -36,14 +36,13 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/user/login",
-        credentials,
-        { withCredentials: true }
+      const response = await http.post(
+        "/api/user/login",
+        credentials
       );
 
       if (response.status === 200) {
-        const { token } = response?.data;
+        const { token } = response.data.data;
         login(token, rememberMe);
         setCredentials({ userName: "", email: "", password: "" });
         toast.success(response.data.msg || "Login successful");

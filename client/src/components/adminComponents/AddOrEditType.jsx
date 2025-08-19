@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { convertToNepaliUnicode } from '../../utils/preetiToUnicode'
-import axios from 'axios'
+import http from '../../utils/http'
 import AuthContext from '../../context/AuthContext'
 import { toast } from 'react-toastify'
+
 const AddOrEditType = ({ onClose, openAddorEdit, postTypeToEdit }) => {
     const { token } = useContext(AuthContext)
     const [postType, setPostType] = useState({
@@ -17,6 +18,7 @@ const AddOrEditType = ({ onClose, openAddorEdit, postTypeToEdit }) => {
             [name]: convertToNepaliUnicode(value),
         }))
     }
+    
     const handleInputChange = (e) => {
         const { name, value } = e.target
         setPostType((prev) => ({
@@ -24,44 +26,31 @@ const AddOrEditType = ({ onClose, openAddorEdit, postTypeToEdit }) => {
             [name]: value,
         }))
     }
+    
     //add new post type
     const handleNewType = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/postType/add-postType', postType, {
-                headers: {
-                    Authorization: `Bearer ${token.trim()}`
-                }
-            }, { withCredentials: true })
+            const response = await http.post('/api/postType/add-postType', postType)
             if (response.status == 201) {
-                toast.success("सााहित्यको प्रकार सिर्जना भयो")
+                toast.success("साेहित्यको प्रकार सिर्जना भयो")
             }
         } catch (error) {
             console.log(error)
             toast.error(error.response.data.msg)
-
         }
     }
 
     const editPostType = async () => {
         try {
-            const response = await axios.put(`http://localhost:8000/api/postType/updatePostType/${postTypeToEdit._id}`,
-                postType,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.trim()}`
-                    }
-                },
-
-                {
-                    withCredentials: true
-                })
-                if(response.status==200){
-                    toast.success('सफलापुर्वक सच्याईएको छ ।')
-                }
+            const response = await http.put(`/api/postType/updatePostType/${postTypeToEdit._id}`, postType)
+            if(response.status==200){
+                toast.success('सफलापुर्वक सच्याईएको छ ।')
+            }
         } catch (error) {
             console.log(error)
         }
     }
+    
     //both edit and add post type 
     const handleSubmit = (e) => {
         e.preventDefault(); // prevent page reload
@@ -76,6 +65,7 @@ const AddOrEditType = ({ onClose, openAddorEdit, postTypeToEdit }) => {
             onClose(!openAddorEdit)
         }
     };
+    
     return (
         <>
             {/* Backdrop */}
@@ -139,7 +129,6 @@ const AddOrEditType = ({ onClose, openAddorEdit, postTypeToEdit }) => {
             </div>
 
         </>
-
 
     )
 }

@@ -1,6 +1,5 @@
-
 import { useEffect } from 'react'
-import axios from 'axios'
+import http from '../../utils/http'
 import { useContext } from 'react'
 import AuthContext from '../../context/AuthContext'
 import { useState } from 'react'
@@ -9,6 +8,7 @@ import AddOrEditType from '../../components/adminComponents/AddOrEditType'
 import { confirmAlert } from "react-confirm-alert";
 import { useNavigate } from 'react-router-dom'
 import { toast } from "react-toastify";
+
 const BlogTypes = () => {
   const navigate= useNavigate()
     const {token}=useContext(AuthContext)
@@ -18,11 +18,7 @@ const BlogTypes = () => {
     useEffect(()=>{
         const fetchTypes=async()=>{
             try{
-                const response= await axios.get("http://localhost:8000/api/postType/getAllPostTypes",{
-                headers:{
-                    Authorization:`Bearer ${token.trim()}`
-                }
-             })
+                const response= await http.get("/api/postType/getAllPostTypes")
              setPostTypes(response.data)
             }
             catch(error){
@@ -30,16 +26,18 @@ const BlogTypes = () => {
             }
         }
         fetchTypes()
-
     },[setPostTypes])
+    
     const handleEdit=(postType)=>{
       setPostTypeToEdit(postType)
       setOpenAddorEdit(!openAddorEdit)
     }
+    
     const handleAdd=()=>{
       setPostTypeToEdit(null)
       setOpenAddorEdit(!openAddorEdit)
     }
+    
     const handleDeletePostType=async(postTypeId)=>{
        confirmAlert({
       title: "पोस्ट मेटाउन निश्चित हुनुहुन्छ?",
@@ -49,9 +47,8 @@ const BlogTypes = () => {
           label: "हो",
           onClick: async () => {
             try {
-              const response = await axios.delete(
-                `http://localhost:8000/api/postType/deletePostType/${postTypeId}`,
-                { headers: { Authorization: `Bearer ${token?.trim()}` } }
+              const response = await http.delete(
+                `/api/postType/deletePostType/${postTypeId}`
               );
               if (response.status === 200) {
                 toast.success("सफलतापुर्वक हटाइयो");
@@ -72,19 +69,8 @@ const BlogTypes = () => {
       closeOnEscape: true,
       closeOnClickOutside: true,
     });
-      
-      // try{
-      //   const response= await axios.delete(`http://localhost:8000/api/postType/deletePostType/${postTypeId}`,{
-      //     headers:{
-      //       Authorization:`Bearer ${token.trim()}`
-      //     }
-      //   },{
-      //     withCredentials:true
-      //   })
-        
-      // }catch(error){
-      // }
     }
+    
   return (
     <>
     <div className="bg-white rounded-lg shadow-md p4 max-w-md mx-auto">
